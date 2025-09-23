@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/auth-service.dir/src/main.cpp.o CMakeFiles/auth-service.dir/src/auth.cpp.o -o auth-service  /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so 

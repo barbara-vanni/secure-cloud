@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/audit-service.dir/src/main.cpp.o CMakeFiles/audit-service.dir/src/audit.cpp.o -o audit-service 

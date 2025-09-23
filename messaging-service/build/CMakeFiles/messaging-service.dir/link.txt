@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/messaging-service.dir/src/main.cpp.o CMakeFiles/messaging-service.dir/src/messaging.cpp.o -o messaging-service  /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so 

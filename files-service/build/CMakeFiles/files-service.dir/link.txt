@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/files-service.dir/src/main.cpp.o CMakeFiles/files-service.dir/src/files.cpp.o -o files-service  /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so 

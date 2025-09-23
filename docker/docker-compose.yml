@@ -1,0 +1,116 @@
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
+
+# Here the instructions define your application as a service called "app".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
+services:
+  auth-service:
+    build:
+      context: ../auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+    networks:
+      - secure-cloud-network
+    depends_on:
+      - postgres
+      - redis
+
+  messaging-service:
+    build:
+      context: ../messaging-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    env_file: .env
+    environment:
+        - AUTH_SERVICE_URL=http://auth:8080
+        - DB_HOST=postgres
+    networks:
+      - secure-cloud-network
+    depends_on:
+      - postgres
+      - auth-service
+
+  files-service:
+    build:
+      context: ../files-service
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    env_file: .env
+    environment:
+      - AUTH_SERVICE_URL=http://auth:8080
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+    networks:
+      - secure-cloud-network
+    depends_on:
+      - auth-service
+      - minio
+
+  audit-service:
+    build:
+      context: ../audit-service
+      dockerfile: Dockerfile
+    ports:
+      - "8083:8083"
+    env_file: .env
+    environment:
+      - DB_HOST=postgres
+    networks:
+      - secure-cloud-network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=securecloud
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - secure-cloud-network
+
+  redis:
+      image: redis:6
+      ports:
+        - "6379:6379"
+      env_file: .env
+      networks:
+        - secure-cloud-network
+
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    env_file: .env
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - secure-cloud-network
+
+volumes:
+  postgres-data:
+  redis_data:
+  minio_data:
+
+networks:
+  secure-cloud-network:
+    driver: bridge

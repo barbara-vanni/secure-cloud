@@ -1,0 +1,7 @@
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/messaging-service.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/list_install_components.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/install.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/install/local.dir
+/mnt/c/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/build/CMakeFiles/install/strip.dir
