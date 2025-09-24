@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Build and push auth-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./auth-service
+          push: true
+          tags: barbaraaa/auth-service:latest
+
+      - name: Build and push files-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./files-service
+          push: true
+          tags: barbaraaa/files-service:latest
+
+      - name: Build and push audit-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./audit-service
+          push: true
+          tags: barbaraaa/audit-service:latest
+
+      - name: Build and push messaging-service
+        uses: docker/build-push-action@v4
+        with:
+          context: ./messaging-service
+          push: true
+          tags: barbaraaa/messaging-service:latest
+
+      - name: Deploy with Docker Compose
+        run: |
+          docker-compose pull
+          docker-compose up -d

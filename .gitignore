@@ -1,5 +1,7 @@
 # Prerequisites
 *.d
+.env
+.env.*
 
 # Compiled Object files
 *.slo
@@ -39,3 +41,8 @@
 
 # debug information files
 *.dwo
+
+.idea/
+*.iml
+*.iws
+out/
