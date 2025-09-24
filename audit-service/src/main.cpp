@@ -9,5 +9,6 @@
 int main () {
     std::cout<<"Service d'audit demarré"<<std::endl;
     AuditService::run();
+    AuditService::read();
     return 0;
 }

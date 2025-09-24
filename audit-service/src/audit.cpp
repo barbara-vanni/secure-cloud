@@ -8,3 +8,7 @@
 void AuditService::run() {
     std::cout<<"Audit Service en cours d'execution"<<std::endl;
 }
+
+void AuditService::read() {
+    std::cout<<"ficher de log"<<std::endl;
+}

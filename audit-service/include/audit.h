@@ -9,6 +9,7 @@
 class AuditService {
     public:
         void static run();
+        void static read();
 };
 
 
