@@ -20,4 +20,4 @@ USER root
 ENV DB_HOST=postgres
 
 # Commande de démarrage
-CMD ["./audit-service/build"]
+CMD ["./audit-service"]
