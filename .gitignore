@@ -2,6 +2,7 @@
 *.d
 .env
 .env.*
+docker/.env
 
 # Compiled Object files
 *.slo
