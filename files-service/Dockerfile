@@ -12,6 +12,12 @@ WORKDIR /app
 # Copie le binaire depuis le build local ( à faire avec WSL)
 COPY build/files-service /app/
 
+# Donne les permissions d'exécution
+RUN chmod +x /app/files-service
+
+# Utilisateur root (ou un utilisateur spécifique si nécessaire)
+USER root
+
 # Variables d'environnement (à externaliser// .env dans le repertoire docker !)
 ENV AUTH_SERVICE_URL=http://auth:8080
 ENV MINIO_ENDPOINT=minio:9000
