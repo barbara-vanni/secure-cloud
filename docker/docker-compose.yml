@@ -9,9 +9,7 @@
 # https://github.com/docker/awesome-compose
 services:
   auth-service:
-    build:
-      context: ../auth-service
-      dockerfile: Dockerfile
+    image: barbaraaa/auth-service:latest
     ports:
       - "8080:8080"
     env_file: .env
@@ -25,9 +23,7 @@ services:
       - redis
 
   messaging-service:
-    build:
-      context: ../messaging-service
-      dockerfile: Dockerfile
+    image: barbaraaa/messaging-service:latest
     ports:
       - "8081:8081"
     env_file: .env
@@ -41,9 +37,7 @@ services:
       - auth-service
 
   files-service:
-    build:
-      context: ../files-service
-      dockerfile: Dockerfile
+    image: barbaraaa/files-service:latest
     ports:
       - "8082:8082"
     env_file: .env
@@ -59,9 +53,7 @@ services:
       - minio
 
   audit-service:
-    build:
-      context: ../audit-service
-      dockerfile: Dockerfile
+    image: barbaraaa/audit-service:latest
     ports:
       - "8083:8083"
     env_file: .env

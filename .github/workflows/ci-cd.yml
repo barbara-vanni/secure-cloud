@@ -48,6 +48,7 @@ jobs:
           tags: barbaraaa/messaging-service:latest
 
       - name: Deploy with Docker Compose
+        working-directory: ./docker
         run: |
           docker-compose pull
           docker-compose up -d
