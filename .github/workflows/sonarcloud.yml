@@ -1,11 +1,9 @@
 name: SonarCloud Analysis
-
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
 jobs:
   sonarqube:
     runs-on: ubuntu-latest
@@ -18,51 +16,56 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcovr lcov
+          sudo apt-get install -y gcovr lcov cmake build-essential
 
-      - name: Build auth-service
+      - name: Download SonarQube Build Wrapper
         run: |
+          wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip build-wrapper-linux-x86.zip
+
+      - name: Build with Build Wrapper
+        run: |
+          # Auth-service
           cd auth-service
           rm -rf build
           mkdir -p build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-          echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-auth.xml
-
-      - name: Build files-service
-        run: |
+          cd ../..
+          # Files-service
           cd files-service
           rm -rf build
           mkdir -p build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-          echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-files.xml
-
-      - name: Build audit-service
-        run: |
+          cd ../..
+          # Audit-service
           cd audit-service
           rm -rf build
           mkdir -p build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-          echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-audit.xml
-
-      - name: Build messaging-service
-        run: |
+          cd ../..
+          # Messaging-service
           cd messaging-service
           rm -rf build
           mkdir -p build && cd build
-          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-          echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-messaging.xml
+          cd ../..
+
+      - name: Generate coverage report
+        run: |
+          gcovr -r . --xml -o coverage.xml
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@master
+        uses: SonarSource/sonarqube-scan-action@v2
         with:
           args: >
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=barbara-vanni
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
+            -Dsonar.cfamily.build-wrapper-output=bw-output
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
