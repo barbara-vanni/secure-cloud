@@ -60,8 +60,10 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@master
         with:
           args: >
+            -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=barbara-vanni
             -Dsonar.projectKey=barbara-vanni_secure-cloud
+            -Dsonar.projectVersion=${{ github.run_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
