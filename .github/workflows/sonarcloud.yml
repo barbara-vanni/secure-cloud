@@ -23,11 +23,43 @@ jobs:
       - name: Build and test with coverage
         run: |
           cd auth-service
+          rm -rf build 
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           make test
           gcovr -r .. --xml -o ../../coverage-auth.xml
+
+      - name: Build and test with coverage
+        run: |
+          cd files-service
+          rm -rf build
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          make
+          make test
+          gcovr -r .. --xml -o ../../coverage-files.xml
+
+      - name: Build and test with coverage
+        run: |
+          cd audit-service
+          rm -rf build
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          make
+          make test
+          gcovr -r .. --xml -o ../../coverage-audit.xml
+
+      - name: Build and test with coverage
+        run: |
+          cd messaging-service
+          rm -rf build
+          mkdir -p build && cd build
+          cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          make
+          make test
+          gcovr -r .. --xml -o ../../coverage-messaging.xml
+
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
