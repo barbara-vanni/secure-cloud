@@ -1,3 +1,3 @@
 # secure-cloud
 
-Messagerie sécurisé pour médecine sans frontières (MCF)
+Messagerie sécurisée pour médecine sans frontières (MCF)
