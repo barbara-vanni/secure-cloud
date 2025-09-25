@@ -20,55 +20,40 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcovr lcov
 
-      - name: Build and test auth-service with coverage
+      - name: Build auth-service
         run: |
           cd auth-service
-          rm -rf build 
+          rm -rf build
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-#          make test
-#          gcovr -r .. --xml -o ../../coverage-auth.xml
-
-          # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-auth.xml
 
-      - name: Build and test files-service with coverage
+      - name: Build files-service
         run: |
           cd files-service
           rm -rf build
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-#          make test
-#          gcovr -r .. --xml -o ../../coverage-files.xml
-
-          # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-files.xml
 
-      - name: Build and test audit-service with coverage
+      - name: Build audit-service
         run: |
           cd audit-service
           rm -rf build
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-#          make test
-#          gcovr -r .. --xml -o ../../coverage-audit.xml
-          # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-audit.xml
 
-      - name: Build and test messaging-service with coverage
+      - name: Build messaging-service
         run: |
           cd messaging-service
           rm -rf build
           mkdir -p build && cd build
           cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
-#          make test
-#          gcovr -r .. --xml -o ../../coverage-messaging.xml
-
-          # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-messaging.xml
 
       - name: SonarCloud Scan
