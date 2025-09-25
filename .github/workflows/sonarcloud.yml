@@ -18,10 +18,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcovr lcov cmake build-essential
 
-      - name: Download SonarQube Build Wrapper
+      - name: Download and prepare SonarQube Build Wrapper
         run: |
           wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip build-wrapper-linux-x86.zip
+          chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
+          sudo mv build-wrapper-linux-x86/build-wrapper-linux-x86-64 /usr/local/bin/build-wrapper
 
       - name: Build with Build Wrapper
         run: |
@@ -29,30 +31,31 @@ jobs:
           cd auth-service
           rm -rf build
           mkdir -p build && cd build
-          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Files-service
           cd files-service
           rm -rf build
           mkdir -p build && cd build
-          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Audit-service
           cd audit-service
           rm -rf build
           mkdir -p build && cd build
-          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Messaging-service
           cd messaging-service
           rm -rf build
           mkdir -p build && cd build
-          ../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
+
 
       - name: Generate coverage report
         run: |
