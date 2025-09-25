@@ -20,7 +20,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcovr lcov
 
-      - name: Build and test with coverage
+      - name: Build and test auth-service with coverage
         run: |
           cd auth-service
           rm -rf build 
@@ -33,7 +33,7 @@ jobs:
           # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-auth.xml
 
-      - name: Build and test with coverage
+      - name: Build and test files-service with coverage
         run: |
           cd files-service
           rm -rf build
@@ -46,7 +46,7 @@ jobs:
           # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-files.xml
 
-      - name: Build and test with coverage
+      - name: Build and test audit-service with coverage
         run: |
           cd audit-service
           rm -rf build
@@ -58,7 +58,7 @@ jobs:
           # Génère un rapport de couverture vide
           echo '<?xml version="1.0" encoding="UTF-8"?><coverage version="1"><packages></packages></coverage>' > ../../coverage-audit.xml
 
-      - name: Build and test with coverage
+      - name: Build and test messaging-service with coverage
         run: |
           cd messaging-service
           rm -rf build
