@@ -60,7 +60,7 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@master
         with:
           args: >
-            -Dsonar.organization=Barbara Vanni
+            -Dsonar.organization=Barbara_Vanni
             -Dsonar.projectKey=sonar-cloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
