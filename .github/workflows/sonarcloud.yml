@@ -23,7 +23,13 @@ jobs:
           wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip build-wrapper-linux-x86.zip
           chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
-          sudo mv build-wrapper-linux-x86/build-wrapper-linux-x86-64 /usr/local/bin/build-wrapper
+          sudo mkdir -p /opt/build-wrapper
+          sudo cp build-wrapper-linux-x86/build-wrapper-linux-x86-64 /opt/build-wrapper/
+          sudo cp build-wrapper-linux-x86/libinterceptor-x86_64.so /opt/build-wrapper/
+          sudo cp build-wrapper-linux-x86/libinterceptor-i686.so /opt/build-wrapper/
+          echo "/opt/build-wrapper" >> $GITHUB_PATH
+          echo "LD_LIBRARY_PATH=/opt/build-wrapper" >> $GITHUB_ENV
+
 
       - name: Build with Build Wrapper
         run: |
