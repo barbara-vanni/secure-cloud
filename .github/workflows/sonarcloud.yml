@@ -27,7 +27,6 @@ jobs:
 
       - name: Build with Build Wrapper
         run: |
-          # Auth-service
           cd auth-service
           rm -rf build
           mkdir -p build && cd build
