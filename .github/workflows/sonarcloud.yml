@@ -66,7 +66,7 @@ jobs:
         with:
           args: >
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.organization=Barbara-vanni
+            -Dsonar.organization=Barbara-Vanni
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
             -Dsonar.cfamily.build-wrapper-output=bw-output
