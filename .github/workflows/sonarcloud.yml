@@ -31,28 +31,28 @@ jobs:
           cd auth-service
           rm -rf build
           mkdir -p build && cd build
-          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Files-service
           cd files-service
           rm -rf build
           mkdir -p build && cd build
-          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Audit-service
           cd audit-service
           rm -rf build
           mkdir -p build && cd build
-          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
           # Messaging-service
           cd messaging-service
           rm -rf build
           mkdir -p build && cd build
-          build-wrapper --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           make
           cd ../..
 
