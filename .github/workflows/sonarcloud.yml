@@ -60,7 +60,7 @@ jobs:
       - name: Check compile_commands.json
         run: |
           echo "Contenu de compile_commands.json :"
-          cat bw-output/compile_commands.json | grep -E '"file":.*(auth|files|audit|messaging).*.cpp"'
+          cat bw-output/compile_commands.json 
 
       - name: Generate coverage report
         run: |
