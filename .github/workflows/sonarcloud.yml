@@ -49,27 +49,26 @@ jobs:
 
             cd ../..
           done
-          
-          # Fusionner les résultats du Build Wrapper
+                  
+          echo "Merging all Build Wrapper outputs..."
           mkdir -p bw-output
-            for service in auth-service files-service messaging-service audit-service; do
-              if [ -f bw-output-$service/build-wrapper-dump.json ]; then
-                cp bw-output-$service/build-wrapper-dump.json bw-output/build-wrapper-dump-$service.json
-              fi
-          done
-            
-          # Créer un dump global fusionné (simple concat JSON)
-          echo "[" > bw-output/build-wrapper-dump.json
+          echo '{"version":0,"captures":[' > bw-output/build-wrapper-dump.json
           first=true
-          for f in bw-output/build-wrapper-dump-*.json; do
-            if [ "$first" = true ]; then
-              first=false
-            else
-              echo "," >> bw-output/build-wrapper-dump.json
+          
+          for service in auth-service files-service messaging-service audit-service; do
+            if [ -f bw-output-$service/build-wrapper-dump.json ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> bw-output/build-wrapper-dump.json
+              fi
+              # Extraire uniquement le contenu du tableau "captures"
+              sed -n '/"captures": \[/,/\]/{//!p}' bw-output-$service/build-wrapper-dump.json | sed '1d;$d' >> bw-output/build-wrapper-dump.json
             fi
-              cat "$f" | sed '1d;$d' >> bw-output/build-wrapper-dump.json
           done
-          echo "]" >> bw-output/build-wrapper-dump.json
+          
+          echo ']}' >> bw-output/build-wrapper-dump.json
+
   
 
           # Fusion propre des fichiers compile_commands.json
