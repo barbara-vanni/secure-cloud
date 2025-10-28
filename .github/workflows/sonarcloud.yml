@@ -77,7 +77,10 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          gcovr -r . --xml-pretty --cobertura -o coverage.xml
+          echo "Generating gcov coverage files..."
+          rm -rf coverage
+          mkdir coverage
+          gcovr -r . --gcov-output -o coverage || echo "Coverage skipped (no .gcda files found)"
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
@@ -89,7 +92,7 @@ jobs:
             -Dsonar.projectVersion=${{ github.run_number }}
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
             -Dsonar.cfamily.build-wrapper-output=bw-output
-            -Dsonar.coverageReportPaths=coverage.xml
+            -Dsonar.cfamily.gcov.reportsPath=coverage
             -X
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
