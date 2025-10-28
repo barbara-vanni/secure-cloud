@@ -1,12 +1,15 @@
 name: SonarCloud Analysis
+
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+
 jobs:
   sonarqube:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,51 +19,59 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcovr lcov cmake build-essential
+          sudo apt-get install -y gcovr lcov cmake build-essential wget unzip
 
-      - name: Clean and download SonarQube Build Wrapper
+      - name: Download SonarCloud Build Wrapper
         run: |
-          rm -rf build-wrapper-linux-x86 build-wrapper-linux-x86.zip
           wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper-linux-x86.zip
-          unzip build-wrapper-linux-x86.zip
+          unzip -q build-wrapper-linux-x86.zip
           chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
           echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
-          
 
       - name: Build all microservices with Build Wrapper
         run: |
           rm -rf bw-output
           mkdir -p bw-output
-
+          
+          # Compile chaque microservice et capturer les commandes
           for service in auth-service files-service messaging-service audit-service; do
+            echo "Building $service..."
             cd $service
             rm -rf build
             mkdir build && cd build
-            ${BUILD_WRAPPER_PATH} --out-dir bw-output-$service cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-            ${BUILD_WRAPPER_PATH} --out-dir bw-output-$service make
+
+            # Étape CMake
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_FLAGS="--coverage" ..
+          
+            # Étape build avec build-wrapper
+            ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output/$service make -j$(nproc)
+
             cd ../..
           done
 
-          # Fusionner tous les compile_commands.json
+          # Fusion propre des fichiers compile_commands.json
           echo "[" > bw-output/compile_commands.json
           first=true
           for service in auth-service files-service messaging-service audit-service; do
-            if [ -f bw-output-$service/compile_commands.json ]; then
+            f="bw-output/$service/compile_commands.json"
+            if [ -s "$f" ]; then
               if [ "$first" = true ]; then
                 first=false
               else
                 echo "," >> bw-output/compile_commands.json
               fi
-              cat bw-output-$service/compile_commands.json | sed '1d;$d' >> bw-output/compile_commands.json
+              sed '1d;$d' "$f" >> bw-output/compile_commands.json
             fi
           done
           echo "]" >> bw-output/compile_commands.json
-      
 
-      - name: Check compile_commands.json
+      - name: Validate compile_commands.json
         run: |
-          echo "Contenu de compile_commands.json :"
-          cat bw-output/compile_commands.json 
+          echo "Vérification du contenu de compile_commands.json :"
+          cat bw-output/compile_commands.json
+          echo
+          echo "Nombre de commandes trouvées :"
+          grep -c '"file":' bw-output/compile_commands.json || true
 
       - name: Generate coverage report
         run: |
@@ -75,8 +86,8 @@ jobs:
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
+            -Dsonar.cfamily.build-wrapper-output=bw-output
+            -Dsonar.coverageReportPaths=coverage.xml
             -X
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-
