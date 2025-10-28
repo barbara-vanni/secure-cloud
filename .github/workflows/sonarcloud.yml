@@ -29,7 +29,6 @@ jobs:
           chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
           echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
 
-
       - name: Build all microservices with Build Wrapper
         run: |
           rm -rf bw-output
@@ -57,9 +56,9 @@ jobs:
               if [ -f bw-output-$service/build-wrapper-dump.json ]; then
                 cp bw-output-$service/build-wrapper-dump.json bw-output/build-wrapper-dump-$service.json
               fi
-            done
+          done
             
-            # Créer un dump global fusionné (simple concat JSON)
+          # Créer un dump global fusionné (simple concat JSON)
           echo "[" > bw-output/build-wrapper-dump.json
           first=true
           for f in bw-output/build-wrapper-dump-*.json; do
@@ -69,8 +68,8 @@ jobs:
               echo "," >> bw-output/build-wrapper-dump.json
             fi
               cat "$f" | sed '1d;$d' >> bw-output/build-wrapper-dump.json
-            done
-            echo "]" >> bw-output/build-wrapper-dump.json
+          done
+          echo "]" >> bw-output/build-wrapper-dump.json
   
 
   # Fusion propre des fichiers compile_commands.json
