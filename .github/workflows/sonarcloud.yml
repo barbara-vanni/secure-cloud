@@ -63,12 +63,11 @@ jobs:
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
           cd ../..
-      
 
-      - name: Check bw-output directory
+      - name: Check compile_commands.json
         run: |
-          ls -la bw-output/
-          cat bw-output/compile_commands.json
+          echo "Contenu de compile_commands.json :"
+          cat bw-output/compile_commands.json | grep -E '"file":.*(auth|files|audit|messaging).*.cpp"'
 
       - name: Generate coverage report
         run: |
