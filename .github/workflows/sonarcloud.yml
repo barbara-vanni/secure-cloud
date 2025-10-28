@@ -27,13 +27,35 @@ jobs:
           echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
           
 
-      - name: Build with Build Wrapper
+      - name: Build all microservices with Build Wrapper
         run: |
           rm -rf bw-output
           mkdir -p bw-output
-          ${BUILD_WRAPPER_PATH} --out-dir bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" .
-          ${BUILD_WRAPPER_PATH} --out-dir bw-output make -j$(nproc)
 
+          for service in auth-service files-service messaging-service audit-service; do
+            cd $service
+            rm -rf build
+            mkdir build && cd build
+            ${BUILD_WRAPPER_PATH} --out-dir bw-output-$service cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+            ${BUILD_WRAPPER_PATH} --out-dir bw-output-$service make
+            cd ../..
+          done
+
+          # Fusionner tous les compile_commands.json
+          echo "[" > bw-output/compile_commands.json
+          first=true
+          for service in auth-service files-service messaging-service audit-service; do
+            if [ -f bw-output-$service/compile_commands.json ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> bw-output/compile_commands.json
+              fi
+              cat bw-output-$service/compile_commands.json | sed '1d;$d' >> bw-output/compile_commands.json
+            fi
+          done
+          echo "]" >> bw-output/compile_commands.json
+      
 
       - name: Check compile_commands.json
         run: |
