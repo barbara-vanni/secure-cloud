@@ -77,7 +77,7 @@ jobs:
 
       - name: Generate coverage report
         run: |
-          gcovr -r . --xml -o coverage.xml
+          gcovr -r . --xml-pretty --cobertura -o coverage.xml
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
