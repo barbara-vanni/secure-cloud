@@ -57,10 +57,10 @@ jobs:
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
           cd ../..
 
-      - name: Check compile_commands.json
+      - name: Check bw-output directory
         run: |
+          ls -la bw-output/
           cat bw-output/compile_commands.json
-
 
       - name: Generate coverage report
         run: |
