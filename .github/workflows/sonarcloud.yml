@@ -48,16 +48,16 @@ jobs:
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
           cd ../..
 
-          # Audit-service
-          cd audit-service
+          # Messaging-service
+          cd messaging-service
           rm -rf build
           mkdir -p build && cd build
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
           cd ../..
-
-          # Messaging-service
-          cd messaging-service
+          
+          # Audit-service
+          cd audit-service
           rm -rf build
           mkdir -p build && cd build
           ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
