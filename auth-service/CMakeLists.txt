@@ -1,34 +1,30 @@
-# Version minimale de CMake requise
 cmake_minimum_required(VERSION 3.18)
 
-# Nom du projet et version
 project(auth-service VERSION 1.0.0 LANGUAGES CXX)
-
-# Standard C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(OPENSSL_ROOT_DIR "C:/vcpkg/installed/x64-windows")
-set(CMAKE_TOOLCHAIN_FILE "C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+# Ne PAS définir CMAKE_TOOLCHAIN_FILE ni OPENSSL_ROOT_DIR ici.
+# Ça vient du profil CMake de CLion (ligne de commande), sinon CMake ne le prend pas au 1er tour.
 
+find_package(Drogon CONFIG REQUIRED)
+find_package(CURL REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 
-# Ajouter l'exécutable
 add_executable(auth-service
         src/main.cpp
-        src/auth.cpp
+        src/AuthController.cpp
+        include/AuthController.h
 )
 
-# Inclure les répertoires
 target_include_directories(auth-service PRIVATE include)
-# Lier les bibliothèques
 target_link_libraries(auth-service
         PRIVATE
-        OpenSSL::SSL
-        OpenSSL::Crypto
-#        PQ::PQ  # PostgreSQL
-#        Threads::Threads
+        Drogon::Drogon
+        CURL::libcurl
+        nlohmann_json::nlohmann_json
+        OpenSSL::SSL OpenSSL::Crypto
 )
 
-# Installation (optionnel)
 install(TARGETS auth-service DESTINATION bin)

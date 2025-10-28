@@ -3,6 +3,7 @@
 .env
 .env.*
 docker/.env
+auth-service/.env
 
 # Compiled Object files
 *.slo
