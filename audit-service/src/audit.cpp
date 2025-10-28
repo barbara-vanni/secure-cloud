@@ -11,4 +11,8 @@ void AuditService::run() {
 
 void AuditService::read() {
     std::cout<<"Utilisation de mongodb"<<std::endl;
+    int a = 0;
+    int b = 5;
+    int c = a + b ;
+    std::cout<< c <<std::endl;
 }
