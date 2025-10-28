@@ -24,8 +24,8 @@ jobs:
       - name: Clean and download SonarQube Build Wrapper
         run: |
           rm -rf build-wrapper-linux-x86 build-wrapper-linux-x86.zip
-          wget -q https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper-linux-x86.zip
-          unzip -o build-wrapper-linux-x86.zip
+          wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper.zip
+          unzip -o build-wrapper.zip
           chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
           echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
 
@@ -34,19 +34,19 @@ jobs:
           rm -rf bw-output
           mkdir -p bw-output
           
-          # Compile chaque microservice et capturer les commandes
           for service in auth-service files-service messaging-service audit-service; do
-            echo "Building $service..."
+            echo "=== Building $service ==="
             cd $service
             rm -rf build
             mkdir build && cd build
-
-            # Étape CMake
-            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_CXX_FLAGS="--coverage" ..
           
-            # Étape build avec build-wrapper
-            ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output/$service make -j$(nproc)
-
+            # Étape 1 : génération des Makefiles
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+          
+            # Étape 2 : compilation réelle avec le build-wrapper
+            ../../build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
+              --out-dir ../../bw-output make -j$(nproc)
+          
             cd ../..
           done
                   
