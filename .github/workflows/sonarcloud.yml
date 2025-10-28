@@ -31,38 +31,9 @@ jobs:
         run: |
           rm -rf bw-output
           mkdir -p bw-output
+          ${BUILD_WRAPPER_PATH} --out-dir bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" .
+          ${BUILD_WRAPPER_PATH} --out-dir bw-output make -j$(nproc)
 
-          # Auth-service
-          cd auth-service
-          rm -rf build
-          mkdir -p build && cd build
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
-          cd ../..
-
-          # Files-service
-          cd files-service
-          rm -rf build
-          mkdir -p build && cd build
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
-          cd ../..
-
-          # Messaging-service
-          cd messaging-service
-          rm -rf build
-          mkdir -p build && cd build
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
-          cd ../..
-          
-          # Audit-service
-          cd audit-service
-          rm -rf build
-          mkdir -p build && cd build
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
-          ${BUILD_WRAPPER_PATH} --out-dir ../../bw-output make
-          cd ../..
 
       - name: Check compile_commands.json
         run: |
