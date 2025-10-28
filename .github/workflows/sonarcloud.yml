@@ -70,7 +70,12 @@ jobs:
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
-            -Dsonar.cfamily.build-wrapper-output=bw-output
+            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
             -X
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Check Build Wrapper output
+        run: |
+          ls -la bw-output/
+
