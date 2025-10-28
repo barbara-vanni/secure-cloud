@@ -21,12 +21,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcovr lcov cmake build-essential wget unzip
 
-      - name: Download SonarCloud Build Wrapper
+      - name: Clean and download SonarQube Build Wrapper
         run: |
-          wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper-linux-x86.zip
-          unzip -q build-wrapper-linux-x86.zip
+          rm -rf build-wrapper-linux-x86 build-wrapper-linux-x86.zip
+          wget -q https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper-linux-x86.zip
+          unzip -o build-wrapper-linux-x86.zip
           chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
           echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
+
 
       - name: Build all microservices with Build Wrapper
         run: |
