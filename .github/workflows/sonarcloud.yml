@@ -72,7 +72,7 @@ jobs:
           echo "]" >> bw-output/build-wrapper-dump.json
   
 
-  # Fusion propre des fichiers compile_commands.json
+          # Fusion propre des fichiers compile_commands.json
           echo "[" > bw-output/compile_commands.json
           first=true
           for service in auth-service files-service messaging-service audit-service; do
