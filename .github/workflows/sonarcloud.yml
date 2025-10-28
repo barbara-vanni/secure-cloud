@@ -50,8 +50,30 @@ jobs:
 
             cd ../..
           done
+          
+          # Fusionner les résultats du Build Wrapper
+          mkdir -p bw-output
+            for service in auth-service files-service messaging-service audit-service; do
+              if [ -f bw-output-$service/build-wrapper-dump.json ]; then
+                cp bw-output-$service/build-wrapper-dump.json bw-output/build-wrapper-dump-$service.json
+              fi
+            done
+            
+            # Créer un dump global fusionné (simple concat JSON)
+          echo "[" > bw-output/build-wrapper-dump.json
+          first=true
+          for f in bw-output/build-wrapper-dump-*.json; do
+            if [ "$first" = true ]; then
+              first=false
+            else
+              echo "," >> bw-output/build-wrapper-dump.json
+            fi
+              cat "$f" | sed '1d;$d' >> bw-output/build-wrapper-dump.json
+            done
+            echo "]" >> bw-output/build-wrapper-dump.json
+  
 
-          # Fusion propre des fichiers compile_commands.json
+  # Fusion propre des fichiers compile_commands.json
           echo "[" > bw-output/compile_commands.json
           first=true
           for service in auth-service files-service messaging-service audit-service; do
