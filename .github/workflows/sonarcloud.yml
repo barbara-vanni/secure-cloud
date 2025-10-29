@@ -46,14 +46,14 @@ jobs:
 
           for service in auth-service files-service messaging-service audit-service; do
             echo "=== Building $service ==="
-            cd $service
-            rm -rf build
-            mkdir build && cd build
+            mkdir -p $service/build
+            cd $service/build
 
             # Étape 1 : génération des Makefiles
               cmake -DCMAKE_BUILD_TYPE=Debug \
                     -DCMAKE_CXX_FLAGS="--coverage" \
                     -DCMAKE_PREFIX_PATH=/usr/local \
+                    -DCMAKE_CXX_COMPILER=g++ \
                     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
             # Étape 2 : compilation réelle avec le build-wrapper
