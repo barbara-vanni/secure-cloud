@@ -21,6 +21,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y gcovr lcov cmake build-essential wget unzip
 
+      - name: Install Drogon dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git cmake g++ uuid-dev openssl libssl-dev zlib1g-dev libjsoncpp-dev
+          git clone https://github.com/drogonframework/drogon.git
+          cd drogon
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          sudo make install
+          cd ../..
+
+
       - name: Clean and download SonarQube Build Wrapper
         run: |
           rm -rf build-wrapper-linux-x86 build-wrapper-linux-x86.zip
@@ -41,7 +53,7 @@ jobs:
             mkdir build && cd build
           
             # Étape 1 : génération des Makefiles
-            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" ..
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_PREFIX_PATH=/usr/local ..
           
             # Étape 2 : compilation réelle avec le build-wrapper
             ../../build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
