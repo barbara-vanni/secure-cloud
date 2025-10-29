@@ -32,36 +32,36 @@ CONFIGURATION = Debug
 #############################################
 # Include rules file.
 
-include CMakeFiles/rules.ninja
+include CMakeFiles\rules.ninja
 
 # =============================================================================
 
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/
+cmake_ninja_workdir = C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\
 
 #############################################
 # Utility command for edit_cache
 
-build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+build CMakeFiles\edit_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build edit_cache: phony CMakeFiles/edit_cache.util
+build edit_cache: phony CMakeFiles\edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+build CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud -BC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+build rebuild_cache: phony CMakeFiles\rebuild_cache.util
 
 
 #############################################
@@ -73,37 +73,25 @@ build list_install_components: phony
 #############################################
 # Utility command for install
 
-build CMakeFiles/install.util: CUSTOM_COMMAND all
+build CMakeFiles\install.util: CUSTOM_COMMAND all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build install: phony CMakeFiles/install.util
+build install: phony CMakeFiles\install.util
 
 
 #############################################
 # Utility command for install/local
 
-build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+build CMakeFiles\install\local.util: CUSTOM_COMMAND all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build install/local: phony CMakeFiles/install/local.util
-
-
-#############################################
-# Utility command for install/strip
-
-build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
-  DESC = Installing the project stripped...
-  pool = console
-  restat = 1
-
-build install/strip: phony CMakeFiles/install/strip.util
+build install\local: phony CMakeFiles\install\local.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -119,21 +107,19 @@ build install/strip: phony CMakeFiles/install/strip.util
 
 build cmake_object_order_depends_target_auth-service: phony || .
 
-build auth-service/CMakeFiles/auth-service.dir/src/main.cpp.obj: CXX_COMPILER__auth-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/src/main.cpp || cmake_object_order_depends_target_auth-service
+build auth-service\CMakeFiles\auth-service.dir\src\main.cpp.obj: CXX_COMPILER__auth-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service\src\main.cpp || cmake_object_order_depends_target_auth-service
   CONFIG = Debug
-  DEP_FILE = auth-service\CMakeFiles\auth-service.dir\src\main.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd /wd4251 /wd4275
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = auth-service\CMakeFiles\auth-service.dir
   OBJECT_FILE_DIR = auth-service\CMakeFiles\auth-service.dir\src
   TARGET_COMPILE_PDB = auth-service\CMakeFiles\auth-service.dir\
   TARGET_PDB = auth-service\auth-service.pdb
 
-build auth-service/CMakeFiles/auth-service.dir/src/auth.cpp.obj: CXX_COMPILER__auth-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/src/auth.cpp || cmake_object_order_depends_target_auth-service
+build auth-service\CMakeFiles\auth-service.dir\src\AuthController.cpp.obj: CXX_COMPILER__auth-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service\src\AuthController.cpp || cmake_object_order_depends_target_auth-service
   CONFIG = Debug
-  DEP_FILE = auth-service\CMakeFiles\auth-service.dir\src\auth.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd /wd4251 /wd4275
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = auth-service\CMakeFiles\auth-service.dir
   OBJECT_FILE_DIR = auth-service\CMakeFiles\auth-service.dir\src
   TARGET_COMPILE_PDB = auth-service\CMakeFiles\auth-service.dir\
@@ -147,82 +133,71 @@ build auth-service/CMakeFiles/auth-service.dir/src/auth.cpp.obj: CXX_COMPILER__a
 #############################################
 # Link the executable auth-service\auth-service.exe
 
-build auth-service/auth-service.exe: CXX_EXECUTABLE_LINKER__auth-service_Debug auth-service/CMakeFiles/auth-service.dir/src/main.cpp.obj auth-service/CMakeFiles/auth-service.dir/src/auth.cpp.obj | C$:/vcpkg/installed/x64-windows/lib/libssl.lib C$:/vcpkg/installed/x64-windows/lib/libcrypto.lib
+build auth-service\auth-service.exe: CXX_EXECUTABLE_LINKER__auth-service_Debug auth-service\CMakeFiles\auth-service.dir\src\main.cpp.obj auth-service\CMakeFiles\auth-service.dir\src\AuthController.cpp.obj | C$:\vcpkg\installed\x64-windows\debug\lib\drogon.lib C$:\vcpkg\installed\x64-windows\debug\lib\libssl.lib C$:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib C$:\vcpkg\installed\x64-windows\debug\lib\trantor.lib C$:\vcpkg\installed\x64-windows\debug\lib\jsoncpp.lib C$:\vcpkg\installed\x64-windows\debug\lib\libcurl-d.lib
   CONFIG = Debug
-  FLAGS = -g
-  LINK_LIBRARIES = C:/vcpkg/installed/x64-windows/lib/libssl.lib  C:/vcpkg/installed/x64-windows/lib/libcrypto.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+  LINK_LIBRARIES = C:\vcpkg\installed\x64-windows\debug\lib\drogon.lib  C:\vcpkg\installed\x64-windows\debug\lib\libssl.lib  C:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib  rpcrt4.lib  crypt32.lib  C:\vcpkg\installed\x64-windows\debug\lib\trantor.lib  advapi32.lib  ws2_32.lib  C:\vcpkg\installed\x64-windows\debug\lib\jsoncpp.lib  C:\vcpkg\installed\x64-windows\debug\lib\libcurl-d.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = auth-service\CMakeFiles\auth-service.dir
-  POST_BUILD = cd .
+  POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/auth-service.exe -installedDir C:/vcpkg/installed/x64-windows/debug/bin -OutVariable out"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = auth-service\CMakeFiles\auth-service.dir\
   TARGET_FILE = auth-service\auth-service.exe
-  TARGET_IMPLIB = auth-service\libauth-service.dll.a
+  TARGET_IMPLIB = auth-service\auth-service.lib
   TARGET_PDB = auth-service\auth-service.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
-build auth-service/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+build auth-service\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build auth-service/edit_cache: phony auth-service/CMakeFiles/edit_cache.util
+build auth-service\edit_cache: phony auth-service\CMakeFiles\edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build auth-service/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+build auth-service\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud -BC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build auth-service/rebuild_cache: phony auth-service/CMakeFiles/rebuild_cache.util
+build auth-service\rebuild_cache: phony auth-service\CMakeFiles\rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build auth-service/list_install_components: phony
+build auth-service\list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build auth-service/CMakeFiles/install.util: CUSTOM_COMMAND auth-service/all
+build auth-service\CMakeFiles\install.util: CUSTOM_COMMAND auth-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build auth-service/install: phony auth-service/CMakeFiles/install.util
+build auth-service\install: phony auth-service\CMakeFiles\install.util
 
 
 #############################################
 # Utility command for install/local
 
-build auth-service/CMakeFiles/install/local.util: CUSTOM_COMMAND auth-service/all
+build auth-service\CMakeFiles\install\local.util: CUSTOM_COMMAND auth-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build auth-service/install/local: phony auth-service/CMakeFiles/install/local.util
-
-
-#############################################
-# Utility command for install/strip
-
-build auth-service/CMakeFiles/install/strip.util: CUSTOM_COMMAND auth-service/all
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
-  DESC = Installing the project stripped...
-  pool = console
-  restat = 1
-
-build auth-service/install/strip: phony auth-service/CMakeFiles/install/strip.util
+build auth-service\install\local: phony auth-service\CMakeFiles\install\local.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -238,21 +213,19 @@ build auth-service/install/strip: phony auth-service/CMakeFiles/install/strip.ut
 
 build cmake_object_order_depends_target_files-service: phony || .
 
-build files-service/CMakeFiles/files-service.dir/src/main.cpp.obj: CXX_COMPILER__files-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/src/main.cpp || cmake_object_order_depends_target_files-service
+build files-service\CMakeFiles\files-service.dir\src\main.cpp.obj: CXX_COMPILER__files-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service\src\main.cpp || cmake_object_order_depends_target_files-service
   CONFIG = Debug
-  DEP_FILE = files-service\CMakeFiles\files-service.dir\src\main.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = files-service\CMakeFiles\files-service.dir
   OBJECT_FILE_DIR = files-service\CMakeFiles\files-service.dir\src
   TARGET_COMPILE_PDB = files-service\CMakeFiles\files-service.dir\
   TARGET_PDB = files-service\files-service.pdb
 
-build files-service/CMakeFiles/files-service.dir/src/files.cpp.obj: CXX_COMPILER__files-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/src/files.cpp || cmake_object_order_depends_target_files-service
+build files-service\CMakeFiles\files-service.dir\src\files.cpp.obj: CXX_COMPILER__files-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service\src\files.cpp || cmake_object_order_depends_target_files-service
   CONFIG = Debug
-  DEP_FILE = files-service\CMakeFiles\files-service.dir\src\files.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = files-service\CMakeFiles\files-service.dir
   OBJECT_FILE_DIR = files-service\CMakeFiles\files-service.dir\src
   TARGET_COMPILE_PDB = files-service\CMakeFiles\files-service.dir\
@@ -266,82 +239,71 @@ build files-service/CMakeFiles/files-service.dir/src/files.cpp.obj: CXX_COMPILER
 #############################################
 # Link the executable files-service\files-service.exe
 
-build files-service/files-service.exe: CXX_EXECUTABLE_LINKER__files-service_Debug files-service/CMakeFiles/files-service.dir/src/main.cpp.obj files-service/CMakeFiles/files-service.dir/src/files.cpp.obj | C$:/vcpkg/installed/x64-windows/lib/libssl.lib C$:/vcpkg/installed/x64-windows/lib/libcrypto.lib
+build files-service\files-service.exe: CXX_EXECUTABLE_LINKER__files-service_Debug files-service\CMakeFiles\files-service.dir\src\main.cpp.obj files-service\CMakeFiles\files-service.dir\src\files.cpp.obj | C$:\vcpkg\installed\x64-windows\debug\lib\libssl.lib C$:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib
   CONFIG = Debug
-  FLAGS = -g
-  LINK_LIBRARIES = C:/vcpkg/installed/x64-windows/lib/libssl.lib  C:/vcpkg/installed/x64-windows/lib/libcrypto.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+  LINK_LIBRARIES = C:\vcpkg\installed\x64-windows\debug\lib\libssl.lib  C:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = files-service\CMakeFiles\files-service.dir
-  POST_BUILD = cd .
+  POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/files-service.exe -installedDir C:/vcpkg/installed/x64-windows/debug/bin -OutVariable out"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = files-service\CMakeFiles\files-service.dir\
   TARGET_FILE = files-service\files-service.exe
-  TARGET_IMPLIB = files-service\libfiles-service.dll.a
+  TARGET_IMPLIB = files-service\files-service.lib
   TARGET_PDB = files-service\files-service.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
-build files-service/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+build files-service\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build files-service/edit_cache: phony files-service/CMakeFiles/edit_cache.util
+build files-service\edit_cache: phony files-service\CMakeFiles\edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build files-service/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+build files-service\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud -BC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build files-service/rebuild_cache: phony files-service/CMakeFiles/rebuild_cache.util
+build files-service\rebuild_cache: phony files-service\CMakeFiles\rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build files-service/list_install_components: phony
+build files-service\list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build files-service/CMakeFiles/install.util: CUSTOM_COMMAND files-service/all
+build files-service\CMakeFiles\install.util: CUSTOM_COMMAND files-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build files-service/install: phony files-service/CMakeFiles/install.util
+build files-service\install: phony files-service\CMakeFiles\install.util
 
 
 #############################################
 # Utility command for install/local
 
-build files-service/CMakeFiles/install/local.util: CUSTOM_COMMAND files-service/all
+build files-service\CMakeFiles\install\local.util: CUSTOM_COMMAND files-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build files-service/install/local: phony files-service/CMakeFiles/install/local.util
-
-
-#############################################
-# Utility command for install/strip
-
-build files-service/CMakeFiles/install/strip.util: CUSTOM_COMMAND files-service/all
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
-  DESC = Installing the project stripped...
-  pool = console
-  restat = 1
-
-build files-service/install/strip: phony files-service/CMakeFiles/install/strip.util
+build files-service\install\local: phony files-service\CMakeFiles\install\local.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -357,21 +319,19 @@ build files-service/install/strip: phony files-service/CMakeFiles/install/strip.
 
 build cmake_object_order_depends_target_audit-service: phony || .
 
-build audit-service/CMakeFiles/audit-service.dir/src/main.cpp.obj: CXX_COMPILER__audit-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/src/main.cpp || cmake_object_order_depends_target_audit-service
+build audit-service\CMakeFiles\audit-service.dir\src\main.cpp.obj: CXX_COMPILER__audit-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service\src\main.cpp || cmake_object_order_depends_target_audit-service
   CONFIG = Debug
-  DEP_FILE = audit-service\CMakeFiles\audit-service.dir\src\main.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service\include
   OBJECT_DIR = audit-service\CMakeFiles\audit-service.dir
   OBJECT_FILE_DIR = audit-service\CMakeFiles\audit-service.dir\src
   TARGET_COMPILE_PDB = audit-service\CMakeFiles\audit-service.dir\
   TARGET_PDB = audit-service\audit-service.pdb
 
-build audit-service/CMakeFiles/audit-service.dir/src/audit.cpp.obj: CXX_COMPILER__audit-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/src/audit.cpp || cmake_object_order_depends_target_audit-service
+build audit-service\CMakeFiles\audit-service.dir\src\audit.cpp.obj: CXX_COMPILER__audit-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service\src\audit.cpp || cmake_object_order_depends_target_audit-service
   CONFIG = Debug
-  DEP_FILE = audit-service\CMakeFiles\audit-service.dir\src\audit.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service\include
   OBJECT_DIR = audit-service\CMakeFiles\audit-service.dir
   OBJECT_FILE_DIR = audit-service\CMakeFiles\audit-service.dir\src
   TARGET_COMPILE_PDB = audit-service\CMakeFiles\audit-service.dir\
@@ -385,82 +345,71 @@ build audit-service/CMakeFiles/audit-service.dir/src/audit.cpp.obj: CXX_COMPILER
 #############################################
 # Link the executable audit-service\audit-service.exe
 
-build audit-service/audit-service.exe: CXX_EXECUTABLE_LINKER__audit-service_Debug audit-service/CMakeFiles/audit-service.dir/src/main.cpp.obj audit-service/CMakeFiles/audit-service.dir/src/audit.cpp.obj
+build audit-service\audit-service.exe: CXX_EXECUTABLE_LINKER__audit-service_Debug audit-service\CMakeFiles\audit-service.dir\src\main.cpp.obj audit-service\CMakeFiles\audit-service.dir\src\audit.cpp.obj
   CONFIG = Debug
-  FLAGS = -g
-  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+  LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = audit-service\CMakeFiles\audit-service.dir
-  POST_BUILD = cd .
+  POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/audit-service.exe -installedDir C:/vcpkg/installed/x64-windows/debug/bin -OutVariable out"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = audit-service\CMakeFiles\audit-service.dir\
   TARGET_FILE = audit-service\audit-service.exe
-  TARGET_IMPLIB = audit-service\libaudit-service.dll.a
+  TARGET_IMPLIB = audit-service\audit-service.lib
   TARGET_PDB = audit-service\audit-service.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
-build audit-service/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+build audit-service\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build audit-service/edit_cache: phony audit-service/CMakeFiles/edit_cache.util
+build audit-service\edit_cache: phony audit-service\CMakeFiles\edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build audit-service/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+build audit-service\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud -BC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build audit-service/rebuild_cache: phony audit-service/CMakeFiles/rebuild_cache.util
+build audit-service\rebuild_cache: phony audit-service\CMakeFiles\rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build audit-service/list_install_components: phony
+build audit-service\list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build audit-service/CMakeFiles/install.util: CUSTOM_COMMAND audit-service/all
+build audit-service\CMakeFiles\install.util: CUSTOM_COMMAND audit-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build audit-service/install: phony audit-service/CMakeFiles/install.util
+build audit-service\install: phony audit-service\CMakeFiles\install.util
 
 
 #############################################
 # Utility command for install/local
 
-build audit-service/CMakeFiles/install/local.util: CUSTOM_COMMAND audit-service/all
+build audit-service\CMakeFiles\install\local.util: CUSTOM_COMMAND audit-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build audit-service/install/local: phony audit-service/CMakeFiles/install/local.util
-
-
-#############################################
-# Utility command for install/strip
-
-build audit-service/CMakeFiles/install/strip.util: CUSTOM_COMMAND audit-service/all
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
-  DESC = Installing the project stripped...
-  pool = console
-  restat = 1
-
-build audit-service/install/strip: phony audit-service/CMakeFiles/install/strip.util
+build audit-service\install\local: phony audit-service\CMakeFiles\install\local.util
 
 # =============================================================================
 # Write statements declared in CMakeLists.txt:
@@ -476,21 +425,19 @@ build audit-service/install/strip: phony audit-service/CMakeFiles/install/strip.
 
 build cmake_object_order_depends_target_messaging-service: phony || .
 
-build messaging-service/CMakeFiles/messaging-service.dir/src/main.cpp.obj: CXX_COMPILER__messaging-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/src/main.cpp || cmake_object_order_depends_target_messaging-service
+build messaging-service\CMakeFiles\messaging-service.dir\src\main.cpp.obj: CXX_COMPILER__messaging-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service\src\main.cpp || cmake_object_order_depends_target_messaging-service
   CONFIG = Debug
-  DEP_FILE = messaging-service\CMakeFiles\messaging-service.dir\src\main.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = messaging-service\CMakeFiles\messaging-service.dir
   OBJECT_FILE_DIR = messaging-service\CMakeFiles\messaging-service.dir\src
   TARGET_COMPILE_PDB = messaging-service\CMakeFiles\messaging-service.dir\
   TARGET_PDB = messaging-service\messaging-service.pdb
 
-build messaging-service/CMakeFiles/messaging-service.dir/src/messaging.cpp.obj: CXX_COMPILER__messaging-service_unscanned_Debug C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/src/messaging.cpp || cmake_object_order_depends_target_messaging-service
+build messaging-service\CMakeFiles\messaging-service.dir\src\messaging.cpp.obj: CXX_COMPILER__messaging-service_unscanned_Debug C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service\src\messaging.cpp || cmake_object_order_depends_target_messaging-service
   CONFIG = Debug
-  DEP_FILE = messaging-service\CMakeFiles\messaging-service.dir\src\messaging.cpp.obj.d
-  FLAGS = -g -std=gnu++17 -fdiagnostics-color=always
-  INCLUDES = -IC:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/include -isystem C:/vcpkg/installed/x64-windows/include
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -std:c++17 -MDd
+  INCLUDES = -IC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service\include -external:IC:\vcpkg\installed\x64-windows\include -external:W0
   OBJECT_DIR = messaging-service\CMakeFiles\messaging-service.dir
   OBJECT_FILE_DIR = messaging-service\CMakeFiles\messaging-service.dir\src
   TARGET_COMPILE_PDB = messaging-service\CMakeFiles\messaging-service.dir\
@@ -504,101 +451,90 @@ build messaging-service/CMakeFiles/messaging-service.dir/src/messaging.cpp.obj: 
 #############################################
 # Link the executable messaging-service\messaging-service.exe
 
-build messaging-service/messaging-service.exe: CXX_EXECUTABLE_LINKER__messaging-service_Debug messaging-service/CMakeFiles/messaging-service.dir/src/main.cpp.obj messaging-service/CMakeFiles/messaging-service.dir/src/messaging.cpp.obj | C$:/vcpkg/installed/x64-windows/lib/libssl.lib C$:/vcpkg/installed/x64-windows/lib/libcrypto.lib
+build messaging-service\messaging-service.exe: CXX_EXECUTABLE_LINKER__messaging-service_Debug messaging-service\CMakeFiles\messaging-service.dir\src\main.cpp.obj messaging-service\CMakeFiles\messaging-service.dir\src\messaging.cpp.obj | C$:\vcpkg\installed\x64-windows\debug\lib\libssl.lib C$:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib
   CONFIG = Debug
-  FLAGS = -g
-  LINK_LIBRARIES = C:/vcpkg/installed/x64-windows/lib/libssl.lib  C:/vcpkg/installed/x64-windows/lib/libcrypto.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  FLAGS = /DWIN32 /D_WINDOWS /EHsc /Zi /Ob0 /Od /RTC1 -MDd
+  LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
+  LINK_LIBRARIES = C:\vcpkg\installed\x64-windows\debug\lib\libssl.lib  C:\vcpkg\installed\x64-windows\debug\lib\libcrypto.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = messaging-service\CMakeFiles\messaging-service.dir
-  POST_BUILD = cd .
+  POST_BUILD = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -noprofile -executionpolicy Bypass -file C:/vcpkg/scripts/buildsystems/msbuild/applocal.ps1 -targetBinary C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/messaging-service.exe -installedDir C:/vcpkg/installed/x64-windows/debug/bin -OutVariable out"
   PRE_LINK = cd .
   TARGET_COMPILE_PDB = messaging-service\CMakeFiles\messaging-service.dir\
   TARGET_FILE = messaging-service\messaging-service.exe
-  TARGET_IMPLIB = messaging-service\libmessaging-service.dll.a
+  TARGET_IMPLIB = messaging-service\messaging-service.lib
   TARGET_PDB = messaging-service\messaging-service.pdb
 
 
 #############################################
 # Utility command for edit_cache
 
-build messaging-service/CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+build messaging-service\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -E echo "No interactive CMake dialog available.""
   DESC = No interactive CMake dialog available...
   restat = 1
 
-build messaging-service/edit_cache: phony messaging-service/CMakeFiles/edit_cache.util
+build messaging-service\edit_cache: phony messaging-service\CMakeFiles\edit_cache.util
 
 
 #############################################
 # Utility command for rebuild_cache
 
-build messaging-service/CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+build messaging-service\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe --regenerate-during-build -SC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud -BC:\Users\drvba\OneDrive\Documents\Dev\secure-cloud"
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
 
-build messaging-service/rebuild_cache: phony messaging-service/CMakeFiles/rebuild_cache.util
+build messaging-service\rebuild_cache: phony messaging-service\CMakeFiles\rebuild_cache.util
 
 
 #############################################
 # Utility command for list_install_components
 
-build messaging-service/list_install_components: phony
+build messaging-service\list_install_components: phony
 
 
 #############################################
 # Utility command for install
 
-build messaging-service/CMakeFiles/install.util: CUSTOM_COMMAND messaging-service/all
+build messaging-service\CMakeFiles\install.util: CUSTOM_COMMAND messaging-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -P cmake_install.cmake"
   DESC = Install the project...
   pool = console
   restat = 1
 
-build messaging-service/install: phony messaging-service/CMakeFiles/install.util
+build messaging-service\install: phony messaging-service\CMakeFiles\install.util
 
 
 #############################################
 # Utility command for install/local
 
-build messaging-service/CMakeFiles/install/local.util: CUSTOM_COMMAND messaging-service/all
+build messaging-service\CMakeFiles\install\local.util: CUSTOM_COMMAND messaging-service\all
   COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake"
   DESC = Installing only the local directory...
   pool = console
   restat = 1
 
-build messaging-service/install/local: phony messaging-service/CMakeFiles/install/local.util
-
-
-#############################################
-# Utility command for install/strip
-
-build messaging-service/CMakeFiles/install/strip.util: CUSTOM_COMMAND messaging-service/all
-  COMMAND = C:\WINDOWS\system32\cmd.exe /C "cd /D C:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service && C:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake"
-  DESC = Installing the project stripped...
-  pool = console
-  restat = 1
-
-build messaging-service/install/strip: phony messaging-service/CMakeFiles/install/strip.util
+build messaging-service\install\local: phony messaging-service\CMakeFiles\install\local.util
 
 # =============================================================================
 # Target aliases.
 
-build audit-service: phony audit-service/audit-service.exe
+build audit-service: phony audit-service\audit-service.exe
 
-build audit-service.exe: phony audit-service/audit-service.exe
+build audit-service.exe: phony audit-service\audit-service.exe
 
-build auth-service: phony auth-service/auth-service.exe
+build auth-service: phony auth-service\auth-service.exe
 
-build auth-service.exe: phony auth-service/auth-service.exe
+build auth-service.exe: phony auth-service\auth-service.exe
 
-build files-service: phony files-service/files-service.exe
+build files-service: phony files-service\files-service.exe
 
-build files-service.exe: phony files-service/files-service.exe
+build files-service.exe: phony files-service\files-service.exe
 
-build messaging-service: phony messaging-service/messaging-service.exe
+build messaging-service: phony messaging-service\messaging-service.exe
 
-build messaging-service.exe: phony messaging-service/messaging-service.exe
+build messaging-service.exe: phony messaging-service\messaging-service.exe
 
 # =============================================================================
 # Folder targets.
@@ -608,35 +544,35 @@ build messaging-service.exe: phony messaging-service/messaging-service.exe
 #############################################
 # Folder: C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud
 
-build all: phony auth-service/all files-service/all audit-service/all messaging-service/all
+build all: phony auth-service\all files-service\all audit-service\all messaging-service\all
 
 # =============================================================================
 
 #############################################
 # Folder: C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service
 
-build audit-service/all: phony audit-service/audit-service.exe
+build audit-service\all: phony audit-service\audit-service.exe
 
 # =============================================================================
 
 #############################################
 # Folder: C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service
 
-build auth-service/all: phony auth-service/auth-service.exe
+build auth-service\all: phony auth-service\auth-service.exe
 
 # =============================================================================
 
 #############################################
 # Folder: C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service
 
-build files-service/all: phony files-service/files-service.exe
+build files-service\all: phony files-service\files-service.exe
 
 # =============================================================================
 
 #############################################
 # Folder: C:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service
 
-build messaging-service/all: phony messaging-service/messaging-service.exe
+build messaging-service\all: phony messaging-service\messaging-service.exe
 
 # =============================================================================
 # Built-in targets
@@ -645,14 +581,14 @@ build messaging-service/all: phony messaging-service/messaging-service.exe
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/cmake_install.cmake C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/auth-service/cmake_install.cmake C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/files-service/cmake_install.cmake C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/audit-service/cmake_install.cmake C$:/Users/drvba/OneDrive/Documents/Dev/secure-cloud/messaging-service/cmake_install.cmake: RERUN_CMAKE | C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCCompilerABI.c C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXCompilerABI.cpp C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCommonLanguageInclude.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCompilerIdDetection.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCXXCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerId.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerSupport.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineRCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineSystem.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeFindBinUtils.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeGenericSystem.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeInitializeConfigs.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeLanguageInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseLibraryArchitecture.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeRCCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeRCInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystem.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystemSpecificInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystemSpecificInitialize.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCXXCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCompilerCommon.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestRCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX-CXXImportStd.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindOpenSSL.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindPackageHandleStandardArgs.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindPackageMessage.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCXXLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCommonLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeInspectCLinker.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeInspectCXXLinker.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/FeatureTesting.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-Determine-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-Initialize.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-windres.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/4.0.2/CMakeCCompiler.cmake CMakeFiles/4.0.2/CMakeCXXCompiler.cmake CMakeFiles/4.0.2/CMakeRCCompiler.cmake CMakeFiles/4.0.2/CMakeSystem.cmake CMakeLists.txt audit-service/CMakeLists.txt auth-service/CMakeLists.txt files-service/CMakeLists.txt messaging-service/CMakeLists.txt
+build build.ninja C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\cmake_install.cmake C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\auth-service\cmake_install.cmake C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\files-service\cmake_install.cmake C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\audit-service\cmake_install.cmake C$:\Users\drvba\OneDrive\Documents\Dev\secure-cloud\messaging-service\cmake_install.cmake: RERUN_CMAKE | C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCCompilerABI.c C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXCompilerABI.cpp C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCompilerIdDetection.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDependentOption.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCXXCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerABI.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerId.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerSupport.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineRCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineSystem.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeFindBinUtils.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeFindDependencyMacro.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeGenericSystem.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseImplicitIncludeInfo.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseImplicitLinkInfo.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseLibraryArchitecture.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakePushCheckState.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeRCCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeRCInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystem.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCXXCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCompilerCommon.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestRCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckCSourceCompiles.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckCXXSourceRuns.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckIncludeFile.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckLibraryExists.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ADSP-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ARMCC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ARMClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\AppleClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Borland-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Bruce-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Clang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Clang-DetermineCompilerInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Compaq-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Cray-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\CrayClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Embarcadero-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Fujitsu-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GHS-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GNU-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\HP-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\HP-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IAR-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Intel-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\LCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-CXX-CXXImportStd.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\NVHPC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\NVIDIA-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\OrangeC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\PGI-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\PathScale-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SCO-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SDCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SunPro-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TI-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TIClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Tasking-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Watcom-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XL-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XL-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XLClang-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\zOS-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindOpenSSL.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindPackageHandleStandardArgs.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindPackageMessage.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindThreads.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindZLIB.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeDetermineLinkerId.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeInspectCLinker.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeInspectCXXLinker.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CheckSourceCompiles.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CheckSourceRuns.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\FeatureTesting.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-Determine-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\SelectLibraryConfigurations.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-config-version.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-config.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets-debug.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets-release.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLConfig.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets.cmake C$:\vcpkg\installed\x64-windows\share\curl\vcpkg-cmake-wrapper.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonConfig.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonUtilities.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindBrotli.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindFilesystem.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindJsoncpp.cmake C$:\vcpkg\installed\x64-windows\share\drogon\ParseAndAddDrogonTests.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonConfig.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonTargets.cmake C$:\vcpkg\installed\x64-windows\share\openssl\vcpkg-cmake-wrapper.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorConfig.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets.cmake C$:\vcpkg\installed\x64-windows\share\zlib\vcpkg-cmake-wrapper.cmake C$:\vcpkg\scripts\buildsystems\vcpkg.cmake CMakeCache.txt CMakeFiles\4.0.2\CMakeCCompiler.cmake CMakeFiles\4.0.2\CMakeCXXCompiler.cmake CMakeFiles\4.0.2\CMakeRCCompiler.cmake CMakeFiles\4.0.2\CMakeSystem.cmake CMakeLists.txt audit-service\CMakeLists.txt auth-service\CMakeLists.txt files-service\CMakeLists.txt messaging-service\CMakeLists.txt
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCCompilerABI.c C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXCompilerABI.cpp C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCXXInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCommonLanguageInclude.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeCompilerIdDetection.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCXXCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerId.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineCompilerSupport.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineRCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeDetermineSystem.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeFindBinUtils.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeGenericSystem.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeInitializeConfigs.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeLanguageInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseImplicitIncludeInfo.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseImplicitLinkInfo.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeParseLibraryArchitecture.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeRCCompiler.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeRCInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystem.cmake.in C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystemSpecificInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeSystemSpecificInitialize.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCXXCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestCompilerCommon.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/CMakeTestRCCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ADSP-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ARMCC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/ARMClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/AppleClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Borland-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Bruce-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/CMakeCommonCompilerMacros.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Clang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Clang-DetermineCompilerInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Compaq-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Compaq-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Cray-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/CrayClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Embarcadero-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Fujitsu-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/FujitsuClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GHS-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX-CXXImportStd.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU-FindBinUtils.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/HP-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/HP-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IAR-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMCPP-C-DetermineVersionInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMCPP-CXX-DetermineVersionInternal.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMClang-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IBMClang-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Intel-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/IntelLLVM-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/LCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/LCC-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/MSVC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/NVHPC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/NVIDIA-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/OpenWatcom-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/OrangeC-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/PGI-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/PathScale-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SCO-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SDCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SunPro-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/SunPro-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TI-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TIClang-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Tasking-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/TinyCC-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/VisualAge-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/VisualAge-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/Watcom-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XL-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XL-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XLClang-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/XLClang-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/zOS-C-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Compiler/zOS-CXX-DetermineCompiler.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindOpenSSL.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindPackageHandleStandardArgs.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/FindPackageMessage.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCXXLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeCommonLinkerInformation.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeDetermineLinkerId.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeInspectCLinker.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/CMakeInspectCXXLinker.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Internal/FeatureTesting.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Linker/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Linker/Windows-GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-Determine-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-C-ABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-C.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-CXX-ABI.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU-CXX.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-GNU.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-Initialize.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows-windres.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/Windows.cmake C$:/Users/drvba/AppData/Local/Programs/CLion/bin/cmake/win/x64/share/cmake-4.0/Modules/Platform/WindowsPaths.cmake CMakeCache.txt CMakeFiles/4.0.2/CMakeCCompiler.cmake CMakeFiles/4.0.2/CMakeCXXCompiler.cmake CMakeFiles/4.0.2/CMakeRCCompiler.cmake CMakeFiles/4.0.2/CMakeSystem.cmake CMakeLists.txt audit-service/CMakeLists.txt auth-service/CMakeLists.txt files-service/CMakeLists.txt messaging-service/CMakeLists.txt: phony
+build C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCCompilerABI.c C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXCompilerABI.cpp C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCXXInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCommonLanguageInclude.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeCompilerIdDetection.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDependentOption.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCXXCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerABI.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerId.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineCompilerSupport.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineRCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeDetermineSystem.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeFindBinUtils.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeFindDependencyMacro.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeGenericSystem.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeInitializeConfigs.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeLanguageInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseImplicitIncludeInfo.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseImplicitLinkInfo.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeParseLibraryArchitecture.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakePushCheckState.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeRCCompiler.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeRCInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystem.cmake.in C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystemSpecificInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeSystemSpecificInitialize.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCXXCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestCompilerCommon.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CMakeTestRCCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckCSourceCompiles.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckCXXSourceRuns.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckIncludeFile.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckIncludeFileCXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\CheckLibraryExists.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ADSP-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ARMCC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\ARMClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\AppleClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Borland-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Bruce-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Clang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Clang-DetermineCompilerInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Compaq-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Cray-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\CrayClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Embarcadero-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Fujitsu-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GHS-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GNU-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\HP-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\HP-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IAR-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Intel-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\LCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-CXX-CXXImportStd.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\NVHPC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\NVIDIA-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\OrangeC-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\PGI-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\PathScale-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SCO-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SDCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SunPro-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TI-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TIClang-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Tasking-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\Watcom-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XL-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XL-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XLClang-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\zOS-C-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindOpenSSL.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindPackageHandleStandardArgs.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindPackageMessage.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindThreads.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\FindZLIB.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeDetermineLinkerId.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeInspectCLinker.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CMakeInspectCXXLinker.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CheckSourceCompiles.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\CheckSourceRuns.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Internal\FeatureTesting.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Linker\MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-Determine-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-Initialize.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC-C.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows-MSVC.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\Windows.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\Platform\WindowsPaths.cmake C$:\Users\drvba\AppData\Local\Programs\CLion\bin\cmake\win\x64\share\cmake-4.0\Modules\SelectLibraryConfigurations.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-config-version.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-config.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets-debug.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets-release.cmake C$:\vcpkg\installed\x64-windows\share\c-ares\c-ares-targets.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLConfig.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\curl\CURLTargets.cmake C$:\vcpkg\installed\x64-windows\share\curl\vcpkg-cmake-wrapper.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonConfig.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonTargets.cmake C$:\vcpkg\installed\x64-windows\share\drogon\DrogonUtilities.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindBrotli.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindFilesystem.cmake C$:\vcpkg\installed\x64-windows\share\drogon\FindJsoncpp.cmake C$:\vcpkg\installed\x64-windows\share\drogon\ParseAndAddDrogonTests.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonConfig.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\nlohmann_json\nlohmann_jsonTargets.cmake C$:\vcpkg\installed\x64-windows\share\openssl\vcpkg-cmake-wrapper.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorConfig.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorConfigVersion.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets-debug.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets-release.cmake C$:\vcpkg\installed\x64-windows\share\trantor\TrantorTargets.cmake C$:\vcpkg\installed\x64-windows\share\zlib\vcpkg-cmake-wrapper.cmake C$:\vcpkg\scripts\buildsystems\vcpkg.cmake CMakeCache.txt CMakeFiles\4.0.2\CMakeCCompiler.cmake CMakeFiles\4.0.2\CMakeCXXCompiler.cmake CMakeFiles\4.0.2\CMakeRCCompiler.cmake CMakeFiles\4.0.2\CMakeSystem.cmake CMakeLists.txt audit-service\CMakeLists.txt auth-service\CMakeLists.txt files-service\CMakeLists.txt messaging-service\CMakeLists.txt: phony
 
 
 #############################################
