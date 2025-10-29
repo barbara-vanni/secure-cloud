@@ -51,11 +51,14 @@ jobs:
             mkdir build && cd build
 
             # Étape 1 : génération des Makefiles
-            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_PREFIX_PATH=/usr/local ..
+              cmake -DCMAKE_BUILD_TYPE=Debug \
+                    -DCMAKE_CXX_FLAGS="--coverage" \
+                    -DCMAKE_PREFIX_PATH=/usr/local \
+                    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
             # Étape 2 : compilation réelle avec le build-wrapper
             $BUILD_WRAPPER_PATH --out-dir ../../bw-output/$service make -j$(nproc)
-
+            cp compile_commands.json ../../bw-output/$service/
             cd ../..
           done
 
