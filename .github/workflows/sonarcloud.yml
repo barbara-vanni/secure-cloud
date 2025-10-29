@@ -45,7 +45,7 @@ jobs:
           mkdir -p bw-output
           build-wrapper-linux-x86-64 --out-dir bw-output bash -c "
           for service in auth-service files-service messaging-service audit-service; do
-            echo "=== Building $service ==='
+            echo "=== Building $service ==="
             rm -rf $service/build
             mkdir -p $service/build
             cd $service/build
@@ -62,7 +62,7 @@ jobs:
             cp compile_commands.json ../../bw-output/$service/
             cd ../..
           done
-          "
+          
           echo "Merging all Build Wrapper outputs..."
           mkdir -p bw-output
           echo '{"version":0,"captures":[' > bw-output/build-wrapper-dump.json
