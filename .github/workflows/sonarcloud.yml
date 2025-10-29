@@ -43,7 +43,7 @@ jobs:
         run: |
           rm -rf bw-output
           mkdir -p bw-output
-          build-wrapper-linux-x86-64 --out-dir bw-output bash -c 
+
           for service in auth-service files-service messaging-service audit-service; do
             echo "=== Building $service ==="
             rm -rf $service/build
