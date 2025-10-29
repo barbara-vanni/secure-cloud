@@ -54,7 +54,7 @@ jobs:
             cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_PREFIX_PATH=/usr/local ..
 
             # Étape 2 : compilation réelle avec le build-wrapper
-            $BUILD_WRAPPER_PATH --out-dir ../../bw-output make -j$(nproc)
+            $BUILD_WRAPPER_PATH --out-dir ../../bw-output/$service make -j$(nproc)
 
             cd ../..
           done
