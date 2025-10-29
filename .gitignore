@@ -5,6 +5,16 @@
 docker/.env
 auth-service/.env
 
+# CMake files
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+*.cmake.user
+*.cmake.install.cmake
+Makefile
+cmake_install.cmake
+
+
 # Compiled Object files
 *.slo
 *.lo
@@ -48,3 +58,33 @@ auth-service/.env
 *.iml
 *.iws
 out/
+
+# -------------------------------
+# Visual Studio / MSVC
+# -------------------------------
+*.suo
+*.user
+*.vcxproj.user
+*.pdb
+*.obj
+*.exe
+*.ilk
+*.idb
+*.log
+*.iobj
+*.ipdb
+*.aps
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+*.ipch
+*.res
+*.rsp
+*.tlog
+
+# -------------------------------
+# vcpkg
+# -------------------------------
+/vcpkg/installed/
