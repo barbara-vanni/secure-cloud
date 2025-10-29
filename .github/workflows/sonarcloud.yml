@@ -41,51 +41,39 @@ jobs:
 
       - name: Build all microservices with Build Wrapper
         run: |
+          # Nettoyage du dossier global du build-wrapper
           rm -rf bw-output
           mkdir -p bw-output
-          
+
+          # Construire tous les services dans un seul build-wrapper
+          echo "=== Building all microservices ==="
+
           for service in auth-service files-service messaging-service audit-service; do
-            echo "=== Building $service ==="
+            echo "--- Configuring $service ---"
             cd $service
             rm -rf build
             mkdir build && cd build
-          
-            # Étape 1 : génération des Makefiles
-            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS="--coverage" -DCMAKE_PREFIX_PATH=/usr/local ..
-          
-            # Étape 2 : compilation réelle avec le build-wrapper
-            ../../build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
-              --out-dir ../../bw-output make -j$(nproc)
-          
+
+            # Génération des Makefiles avec compile_commands.json
+            cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=/usr/local -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+
             cd ../..
           done
-                  
-          echo "Merging all Build Wrapper outputs..."
-          mkdir -p bw-output
-          echo '{"version":0,"captures":[' > bw-output/build-wrapper-dump.json
-          first=true
-          
-          for service in auth-service files-service messaging-service audit-service; do
-            if [ -f bw-output-$service/build-wrapper-dump.json ]; then
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "," >> bw-output/build-wrapper-dump.json
-              fi
-              # Extraire uniquement le contenu du tableau "captures"
-              sed -n '/"captures": \[/,/\]/{//!p}' bw-output-$service/build-wrapper-dump.json | sed '1d;$d' >> bw-output/build-wrapper-dump.json
-            fi
-          done
-          
-          echo ']}' >> bw-output/build-wrapper-dump.json
 
-  
+          # Lancer build-wrapper pour compiler tous les services
+          ../../build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir bw-output bash -c "
+            for service in auth-service files-service messaging-service audit-service; do
+              cd \$service/build
+              make -j\$(nproc)
+              cd ../..
+            done
+          "
 
-          # Fusion propre des fichiers compile_commands.json
+          # Fusion automatique des compile_commands.json dans bw-output/compile_commands.json
           echo "[" > bw-output/compile_commands.json
           first=true
           for service in auth-service files-service messaging-service audit-service; do
-            f="bw-output/$service/compile_commands.json"
+            f="$service/build/compile_commands.json"
             if [ -s "$f" ]; then
               if [ "$first" = true ]; then
                 first=false
@@ -96,6 +84,10 @@ jobs:
             fi
           done
           echo "]" >> bw-output/compile_commands.json
+
+          echo "✅ Build wrapper finished. Compile commands:"
+          cat bw-output/compile_commands.json
+      
 
       - name: Validate compile_commands.json
         run: |
