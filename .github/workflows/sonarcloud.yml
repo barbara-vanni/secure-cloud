@@ -17,7 +17,15 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y cmake g++ jsoncpp-dev libssl-dev libpq-dev libcurl4-openssl-dev libsqlite3-dev uuid-dev zlib1g-dev
+          sudo apt install -y \
+            cmake g++ \
+            libjsoncpp-dev \
+            libssl-dev \
+            libpq-dev \
+            libcurl4-openssl-dev \
+            libsqlite3-dev \
+            uuid-dev \
+            zlib1g-dev
 
       # Téléchargement de la bonne version du build-wrapper
       - name: Download Build Wrapper
