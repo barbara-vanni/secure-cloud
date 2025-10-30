@@ -26,6 +26,13 @@ jobs:
             libsqlite3-dev \
             uuid-dev \
             zlib1g-dev
+          
+          # Installer Drogon depuis la source officielle
+            git clone https://github.com/drogonframework/drogon.git
+            cd drogon
+            mkdir build && cd build
+            cmake ..
+            sudo make install
 
       # Téléchargement de la bonne version du build-wrapper
       - name: Download Build Wrapper
