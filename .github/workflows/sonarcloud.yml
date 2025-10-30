@@ -30,14 +30,18 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           sudo make -j"$(nproc)" install
-
-      - name: Clean and download SonarQube Build Wrapper
+      - name: Clean old build-wrapper
         run: |
-          rm -rf build-wrapper-linux-x86 build-wrapper-linux-x86.zip
-          wget https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip -O build-wrapper.zip
-          unzip -o build-wrapper.zip
-          chmod +x build-wrapper-linux-x86/build-wrapper-linux-x86-64
-          echo "BUILD_WRAPPER_PATH=$(pwd)/build-wrapper-linux-x86/build-wrapper-linux-x86-64" >> $GITHUB_ENV
+          rm -rf build-wrapper
+          rm -rf bw-output
+
+      - name: Download latest build-wrapper
+        run: |
+          mkdir -p build-wrapper
+          curl -sSLo build-wrapper/build-wrapper-linux-x86.zip \
+            https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
+
 
       - name: Build all microservices with Build Wrapper
         run: |
@@ -129,7 +133,7 @@ jobs:
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
-            -Dsonar.cfamily.build-wrapper-output=bw-output
+            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
             -Dsonar.cfamily.gcov.reportsPath=coverage
             -X
         env:
