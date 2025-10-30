@@ -58,12 +58,8 @@ jobs:
           # Chemin du build-wrapper
           BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
           
-          # Vérifier que le binaire est exécutable et toutes les libs sont présentes
-          if ! $BW --version; then
-            echo "Erreur: Build Wrapper non exécutable ou librairies manquantes"
-            ldd $BW
-            exit 1
-          fi
+          $BW --version
+          echo "Build Wrapper OK"
           
           # Liste des services à compiler
           SERVICES=("auth-service" "files-service" "messaging-service" "audit-service")
