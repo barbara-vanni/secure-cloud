@@ -47,6 +47,8 @@ jobs:
         run: |
           rm -rf bw-output
           mkdir -p bw-output
+          
+          BUILD_WRAPPER="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
 
           for service in auth-service files-service messaging-service audit-service; do
             echo "=== Building $service ==="
@@ -62,7 +64,7 @@ jobs:
                     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
 
             # Étape 2 : compilation réelle avec le build-wrapper
-            $BUILD_WRAPPER_PATH --out-dir ../../bw-output/$service make -j$(nproc)
+            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
             cp compile_commands.json ../../bw-output/$service/
             cd ../..
           done
