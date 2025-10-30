@@ -1,136 +1,78 @@
-name: SonarCloud Analysis
+name: SonarCloud C++ Analysis
 
 on:
   push:
-    branches: ["main"]
+    branches: [ main ]
   pull_request:
-    branches: ["main"]
+    branches: [ main ]
 
 jobs:
-  sonarqube:
+  sonarcloud:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Install all dependencies
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            git cmake g++ build-essential wget unzip \
-            gcovr lcov uuid-dev openssl libssl-dev zlib1g-dev libjsoncpp-dev \
-            libcurl4-openssl-dev nlohmann-json3-dev
-          
-          # Clone Drogon avec son sous-module Trantor
-          git clone --recurse-submodules https://github.com/drogonframework/drogon.git
-          cd drogon
-          mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
-          sudo make -j"$(nproc)" install
+          sudo apt update
+          sudo apt install -y cmake g++ jsoncpp-dev libssl-dev libpq-dev libcurl4-openssl-dev libsqlite3-dev uuid-dev zlib1g-dev
 
-      - name: Clean old build-wrapper
-        run: |
-          rm -rf build-wrapper
-          rm -rf bw-output
-
-      - name: Download latest build-wrapper
+      # Téléchargement de la bonne version du build-wrapper
+      - name: Download Build Wrapper
         run: |
           mkdir -p build-wrapper
-          curl -sSLo build-wrapper/build-wrapper-linux-x86.zip \
-            https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
+          curl -L -o build-wrapper/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper/
+          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
 
+      # Étape principale : compilation de tous les microservices avec le build-wrapper
       - name: Build all microservices with Build Wrapper
         run: |
-          #!/bin/bash
-            set -e  # stop on error
-            
-            BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
-            
-            # Nettoyer l'ancien build-wrapper output
-            rm -rf bw-output
-            mkdir -p bw-output
-            
-            # Liste des services
-            services=("auth-service" "files-service" "messaging-service" "audit-service")
-            
-            for service in "${services[@]}"; do
+          set -e
+          mkdir -p bw-output
+          BUILD_WRAPPER=./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+
+          for service in auth-service files-service messaging-service audit-service; do
             echo "=== Building $service ==="
-            
-            # Nettoyer build précédent
-            rm -rf "$service/build"
-            mkdir -p "$service/build"
-            cd "$service/build"
-          
-            # Étape 1 : génération des Makefiles avec CMake
+            rm -rf $service/build
+            mkdir -p $service/build
+            cd $service/build
+
             cmake -DCMAKE_BUILD_TYPE=Debug \
-            -DCMAKE_CXX_FLAGS="--coverage" \
-            -DCMAKE_PREFIX_PATH=/usr/local \
-            -DCMAKE_CXX_COMPILER=g++ \
-            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+                  -DCMAKE_CXX_FLAGS="--coverage" \
+                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
           
-            # Étape 2 : compilation avec Build Wrapper
-            $BW --out-dir ../../bw-output/$service make -j$(nproc)
-          
-            # Copier compile_commands.json pour Sonar
-            cp compile_commands.json ../../bw-output/$service/
-          
+            # Compilation avec build-wrapper
+            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
+
             cd ../..
-            done
-            
-            # Fusionner tous les compile_commands.json pour Sonar
-            echo "[" > bw-output/compile_commands.json
-            first=true
-            for service in "${services[@]}"; do
+          done
+
+          # Fusion des fichiers compile_commands.json
+          echo "[" > bw-output/compile_commands.json
+          first=true
+          for service in auth-service files-service messaging-service audit-service; do
             f="$service/build/compile_commands.json"
             if [ -s "$f" ]; then
-            if [ "$first" = true ]; then
-            first=false
-            else
-            echo "," >> bw-output/compile_commands.json
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> bw-output/compile_commands.json
+              fi
+              sed '1d;$d' "$f" >> bw-output/compile_commands.json
             fi
-            # Extraire uniquement le contenu du tableau
-            sed '1d;$d' "$f" >> bw-output/compile_commands.json
-            fi
-            done
-            echo "]" >> bw-output/compile_commands.json
-            
-            echo "All services built and compile_commands.json merged successfully."
+          done
+          echo "]" >> bw-output/compile_commands.json
 
-
-      - name: Validate compile_commands.json
-        run: |
-          echo "Vérification du contenu de compile_commands.json :"
-          cat bw-output/compile_commands.json
-          echo
-          echo "Nombre de commandes trouvées :"
-          grep -c '"file":' bw-output/compile_commands.json || true
-
-      - name: Generate coverage report
-        run: |
-          echo "Generating gcov coverage files..."
-          rm -rf coverage
-          mkdir coverage
-          gcovr -r . --gcov-output -o coverage || echo "Coverage skipped (no .gcda files found)"
-
-      - name: Check captured sources
-        run: |
-          echo "Files seen by build-wrapper:"
-          grep '"file":' bw-output/build-wrapper-dump.json || echo "No captures found!"
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v2
-        with:
-          args: >
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.organization=secure-cloud
-            -Dsonar.projectKey=barbara-vanni_secure-cloud
-            -Dsonar.projectVersion=${{ github.run_number }}
-            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
-            -Dsonar.cfamily.gcov.reportsPath=coverage
-            -X
+      # Lancement de l'analyse SonarCloud
+      - name: Run SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=drvba_secure-cloud
+            -Dsonar.organization=drvba
+            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
