@@ -45,51 +45,46 @@ jobs:
 
       - name: Build all microservices with Build Wrapper
         run: |
+          set -e  # stop on error
+          
+          # Nettoyage ancien build-wrapper et bw-output
           rm -rf bw-output
           mkdir -p bw-output
           
-          BUILD_WRAPPER="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
-
+          # Extraction du build-wrapper
+          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
+          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+          
+          echo "Contenu du build-wrapper :"
+          ls -l build-wrapper/build-wrapper-linux-x86/
+          
+          # Définir le chemin du binaire
+          BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
+          
+          # Boucle sur les microservices
           for service in auth-service files-service messaging-service audit-service; do
             echo "=== Building $service ==="
             rm -rf $service/build
             mkdir -p $service/build
             cd $service/build
-
-            # Étape 1 : génération des Makefiles
-              cmake -DCMAKE_BUILD_TYPE=Debug \
-                    -DCMAKE_CXX_FLAGS="--coverage" \
-                    -DCMAKE_PREFIX_PATH=/usr/local \
-                    -DCMAKE_CXX_COMPILER=g++ \
-                    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-
-            # Étape 2 : compilation réelle avec le build-wrapper
-            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
+          
+            # Génération des Makefiles avec CMake
+            cmake -DCMAKE_BUILD_TYPE=Debug \
+                  -DCMAKE_CXX_FLAGS="--coverage" \
+                  -DCMAKE_PREFIX_PATH=/usr/local \
+                  -DCMAKE_CXX_COMPILER=g++ \
+                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+          
+            # Compilation avec build-wrapper
+            $BW --out-dir ../../bw-output/$service make -j$(nproc)
+          
+            # Copier compile_commands.json pour chaque service
             cp compile_commands.json ../../bw-output/$service/
+          
             cd ../..
           done
           
-          echo "Merging all Build Wrapper outputs..."
-          mkdir -p bw-output
-          echo '{"version":0,"captures":[' > bw-output/build-wrapper-dump.json
-          first=true
-
-          for service in auth-service files-service messaging-service audit-service; do
-            f="bw-output-$service/build-wrapper-dump.json"
-            if [ -f "$f" ]; then
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "," >> bw-output/build-wrapper-dump.json
-              fi
-              # Extraire uniquement le contenu du tableau "captures"
-              sed -n '/"captures": \[/,/\]/{//!p}' "$f" | sed '1d;$d' >> bw-output/build-wrapper-dump.json
-            fi
-          done
-
-          echo ']}' >> bw-output/build-wrapper-dump.json
-
-          # Fusion propre des fichiers compile_commands.json
+          # Fusion des compile_commands.json
           echo "[" > bw-output/compile_commands.json
           first=true
           for service in auth-service files-service messaging-service audit-service; do
@@ -104,6 +99,7 @@ jobs:
             fi
           done
           echo "]" >> bw-output/compile_commands.json
+      
       
       
 
