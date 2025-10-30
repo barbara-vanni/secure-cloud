@@ -30,6 +30,7 @@ jobs:
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
           sudo make -j"$(nproc)" install
+
       - name: Clean old build-wrapper
         run: |
           rm -rf build-wrapper
@@ -42,66 +43,71 @@ jobs:
             https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
 
-
       - name: Build all microservices with Build Wrapper
         run: |
           set -e  # stop on error
           
-          # Nettoyage ancien build-wrapper et bw-output
+          # Nettoyage ancien build wrapper output
           rm -rf bw-output
           mkdir -p bw-output
           
-          # Extraction du build-wrapper
+          # Décompression du build-wrapper Linux x86-64
           unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
           chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
           
-          echo "Contenu du build-wrapper :"
-          ls -l build-wrapper/build-wrapper-linux-x86/
-          
-          # Définir le chemin du binaire
+          # Chemin du build-wrapper
           BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
           
-          # Boucle sur les microservices
-          for service in auth-service files-service messaging-service audit-service; do
-            echo "=== Building $service ==="
-            rm -rf $service/build
-            mkdir -p $service/build
-            cd $service/build
+          # Vérifier que le binaire est exécutable et toutes les libs sont présentes
+          if ! $BW --version; then
+            echo "Erreur: Build Wrapper non exécutable ou librairies manquantes"
+            ldd $BW
+            exit 1
+          fi
           
-            # Génération des Makefiles avec CMake
+          # Liste des services à compiler
+          SERVICES=("auth-service" "files-service" "messaging-service" "audit-service")
+          
+          # Compilation avec build-wrapper
+          for SERVICE in "${SERVICES[@]}"; do
+            echo "=== Building $SERVICE ==="
+            rm -rf $SERVICE/build
+            mkdir -p $SERVICE/build
+            cd $SERVICE/build
+          
+            # Génération des Makefiles
             cmake -DCMAKE_BUILD_TYPE=Debug \
                   -DCMAKE_CXX_FLAGS="--coverage" \
                   -DCMAKE_PREFIX_PATH=/usr/local \
                   -DCMAKE_CXX_COMPILER=g++ \
                   -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
           
-            # Compilation avec build-wrapper
-            $BW --out-dir ../../bw-output/$service make -j$(nproc)
+            # Compilation réelle avec build-wrapper
+            $BW --out-dir ../../bw-output/$SERVICE make -j$(nproc)
           
-            # Copier compile_commands.json pour chaque service
-            cp compile_commands.json ../../bw-output/$service/
-          
+            # Copier compile_commands.json
+            cp compile_commands.json ../../bw-output/$SERVICE/
             cd ../..
           done
           
-          # Fusion des compile_commands.json
+          # Fusionner tous les compile_commands.json
           echo "[" > bw-output/compile_commands.json
-          first=true
-          for service in auth-service files-service messaging-service audit-service; do
-            f="$service/build/compile_commands.json"
-            if [ -s "$f" ]; then
-              if [ "$first" = true ]; then
-                first=false
+          FIRST=true
+          for SERVICE in "${SERVICES[@]}"; do
+            FILE="$SERVICE/build/compile_commands.json"
+            if [ -s "$FILE" ]; then
+              if [ "$FIRST" = true ]; then
+                FIRST=false
               else
                 echo "," >> bw-output/compile_commands.json
               fi
-              sed '1d;$d' "$f" >> bw-output/compile_commands.json
+              sed '1d;$d' "$FILE" >> bw-output/compile_commands.json
             fi
           done
           echo "]" >> bw-output/compile_commands.json
-      
-      
-      
+          
+          echo "Build Wrapper compilation done, outputs in bw-output/"
+    
 
       - name: Validate compile_commands.json
         run: |
