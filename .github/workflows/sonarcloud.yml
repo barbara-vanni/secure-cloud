@@ -116,6 +116,11 @@ jobs:
           mkdir coverage
           gcovr -r . --gcov-output -o coverage || echo "Coverage skipped (no .gcda files found)"
 
+      - name: Check captured sources
+        run: |
+          echo "Files seen by build-wrapper:"
+          grep '"file":' bw-output/build-wrapper-dump.json || echo "No captures found!"
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v2
         with:
@@ -124,7 +129,7 @@ jobs:
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
-            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
+            -Dsonar.cfamily.build-wrapper-output=bw-output
             -Dsonar.cfamily.gcov.reportsPath=coverage
             -X
         env:
