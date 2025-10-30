@@ -45,65 +45,61 @@ jobs:
 
       - name: Build all microservices with Build Wrapper
         run: |
-          set -e  # stop on error
+          #!/bin/bash
+            set -e  # stop on error
+            
+            BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
+            
+            # Nettoyer l'ancien build-wrapper output
+            rm -rf bw-output
+            mkdir -p bw-output
+            
+            # Liste des services
+            services=("auth-service" "files-service" "messaging-service" "audit-service")
+            
+            for service in "${services[@]}"; do
+            echo "=== Building $service ==="
+            
+            # Nettoyer build précédent
+            rm -rf "$service/build"
+            mkdir -p "$service/build"
+            cd "$service/build"
           
-          # Nettoyage ancien build wrapper output
-          rm -rf bw-output
-          mkdir -p bw-output
-          
-          # Décompression du build-wrapper Linux x86-64
-          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper
-          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
-          
-          # Chemin du build-wrapper
-          BW="./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64"
-          
-          $BW --version
-          echo "Build Wrapper OK"
-          
-          # Liste des services à compiler
-          SERVICES=("auth-service" "files-service" "messaging-service" "audit-service")
-          
-          # Compilation avec build-wrapper
-          for SERVICE in "${SERVICES[@]}"; do
-            echo "=== Building $SERVICE ==="
-            rm -rf $SERVICE/build
-            mkdir -p $SERVICE/build
-            cd $SERVICE/build
-          
-            # Génération des Makefiles
+            # Étape 1 : génération des Makefiles avec CMake
             cmake -DCMAKE_BUILD_TYPE=Debug \
-                  -DCMAKE_CXX_FLAGS="--coverage" \
-                  -DCMAKE_PREFIX_PATH=/usr/local \
-                  -DCMAKE_CXX_COMPILER=g++ \
-                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+            -DCMAKE_CXX_FLAGS="--coverage" \
+            -DCMAKE_PREFIX_PATH=/usr/local \
+            -DCMAKE_CXX_COMPILER=g++ \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
           
-            # Compilation réelle avec build-wrapper
-            $BW --out-dir ../../bw-output/$SERVICE make -j$(nproc)
+            # Étape 2 : compilation avec Build Wrapper
+            $BW --out-dir ../../bw-output/$service make -j$(nproc)
           
-            # Copier compile_commands.json
-            cp compile_commands.json ../../bw-output/$SERVICE/
+            # Copier compile_commands.json pour Sonar
+            cp compile_commands.json ../../bw-output/$service/
+          
             cd ../..
-          done
-          
-          # Fusionner tous les compile_commands.json
-          echo "[" > bw-output/compile_commands.json
-          FIRST=true
-          for SERVICE in "${SERVICES[@]}"; do
-            FILE="$SERVICE/build/compile_commands.json"
-            if [ -s "$FILE" ]; then
-              if [ "$FIRST" = true ]; then
-                FIRST=false
-              else
-                echo "," >> bw-output/compile_commands.json
-              fi
-              sed '1d;$d' "$FILE" >> bw-output/compile_commands.json
+            done
+            
+            # Fusionner tous les compile_commands.json pour Sonar
+            echo "[" > bw-output/compile_commands.json
+            first=true
+            for service in "${services[@]}"; do
+            f="$service/build/compile_commands.json"
+            if [ -s "$f" ]; then
+            if [ "$first" = true ]; then
+            first=false
+            else
+            echo "," >> bw-output/compile_commands.json
             fi
-          done
-          echo "]" >> bw-output/compile_commands.json
-          
-          echo "Build Wrapper compilation done, outputs in bw-output/"
-    
+            # Extraire uniquement le contenu du tableau
+            sed '1d;$d' "$f" >> bw-output/compile_commands.json
+            fi
+            done
+            echo "]" >> bw-output/compile_commands.json
+            
+            echo "All services built and compile_commands.json merged successfully."
+
 
       - name: Validate compile_commands.json
         run: |
