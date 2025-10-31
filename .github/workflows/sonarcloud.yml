@@ -112,21 +112,27 @@ jobs:
         with:
           fetch-depth: 0  # recommandé par Sonar pour l'annotation PR
 
+      # Optionnel mais utile : purge tout artefact local éventuel
+      - name: Clean workspace (sûr en CI)
+        run: |
+          git clean -fdx
+
       - name: Install build tools
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake g++ ninja-build jq
 
-      # Adapte le glob à ta structure (ex: services/*/ ou microservices/*/)
       - name: Configure & build each microservice (CMake)
         shell: bash
         run: |
           set -euo pipefail
+          # Adapte le glob ci-dessous à ton arbo (ex: services/*/ ou microservices/*/)
           for d in */; do
             [[ -f "$d/CMakeLists.txt" ]] || continue
-            echo "==> Configure $d"
+            echo "==> $d"
+            # On supprime toujours le build local pour éviter tout CMakeCache vérolé
+            rm -rf "$d/build"
             cmake -S "$d" -B "$d/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-            echo "==> Build $d"
             cmake --build "$d/build" -- -v
           done
 
@@ -152,3 +158,4 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
+            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json

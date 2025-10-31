@@ -9,6 +9,7 @@ auth-service/.env
 CMakeCache.txt
 CMakeFiles/
 cmake-build-*/
+**/build/
 *.cmake.user
 *.cmake.install.cmake
 Makefile
