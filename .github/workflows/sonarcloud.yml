@@ -139,6 +139,12 @@ jobs:
             git \
             cmake g++ ninja-build jq pkg-config
 
+      - name: Fix Drogon MySQL include path (Ubuntu 24.04)
+        run: |
+          if [ -d /usr/include/mysqlclient ] && [ ! -d /usr/include/mysql ]; then
+            echo "Creating compatibility symlink /usr/include/mysql -> /usr/include/mysqlclient"
+            sudo ln -s /usr/include/mysqlclient /usr/include/mysql
+          fi
 
       - name: Configure & build each microservice (CMake)
         shell: bash
