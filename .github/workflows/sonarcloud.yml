@@ -139,11 +139,18 @@ jobs:
             git \
             cmake g++ ninja-build jq pkg-config
 
-      - name: Fix Drogon MySQL include path (Ubuntu 24.04)
+      - name: Fix Drogon MySQL include and lib paths (Ubuntu 24.04)
         run: |
+          # Crée le lien pour les headers
           if [ -d /usr/include/mariadb ] && [ ! -d /usr/include/mysql ]; then
             echo "Creating compatibility symlink /usr/include/mysql -> /usr/include/mariadb"
             sudo ln -s /usr/include/mariadb /usr/include/mysql
+          fi
+          
+          # Crée le lien pour la bibliothèque
+          if [ -f /usr/lib/x86_64-linux-gnu/libmysqlclient.so ] && [ ! -f /usr/lib/libmysqlclient.so ]; then
+            echo "Creating compatibility symlink /usr/lib/libmysqlclient.so -> /usr/lib/x86_64-linux-gnu/libmysqlclient.so"
+            sudo ln -s /usr/lib/x86_64-linux-gnu/libmysqlclient.so /usr/lib/libmysqlclient.so
           fi
 
       - name: Configure & build each microservice (CMake)
