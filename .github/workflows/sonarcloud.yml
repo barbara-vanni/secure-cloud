@@ -11,89 +11,84 @@
 #    runs-on: ubuntu-latest
 #
 #    steps:
-#      - name: Checkout repository
+#      - name: Checkout
 #        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0  # recommandé par Sonar pour l'annotation PR
 #
-#      - name: Install dependencies
+#      # Optionnel mais utile : purge tout artefact local éventuel
+#      - name: Clean workspace (sûr en CI)
 #        run: |
-#          sudo apt update
-#          sudo apt install -y \
-#            cmake g++ \
-#            libjsoncpp-dev \
-#            libssl-dev \
-#            libpq-dev \
+#          git clean -fdx
+#
+#      - name: Install build tools
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y cmake g++ ninja-build jq
+#
+#      - name: Install system dev packages
+#        run: |
+#          sudo apt-get update
+#          sudo apt-get install -y \
 #            libcurl4-openssl-dev \
+#            libjsoncpp-dev \
+#            libpq-dev \
 #            libsqlite3-dev \
 #            uuid-dev \
 #            zlib1g-dev \
+#            libssl-dev \
 #            nlohmann-json3-dev \
-#            git
+#            libmysqlclient-dev \
+#            git \
+#            cmake g++ ninja-build jq pkg-config
 #
-#
-#          # Installer Drogon depuis la source officielle
-#            git clone --recurse-submodules https://github.com/drogonframework/drogon.git
-#            cd drogon
-#            mkdir build && cd build
-#            cmake ..
-#            sudo make install
-#
-#      # Téléchargement de la bonne version du build-wrapper
-#      - name: Download Build Wrapper
+#      - name: Build Drogon from source (no MySQL)
 #        run: |
-#          mkdir -p build-wrapper
-#          curl -L -o build-wrapper/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-#          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper/
-#          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+#          git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
+#          cd drogon
+#          mkdir build && cd build
+#          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
+#          sudo cmake --build . --target install -j$(nproc)
 #
-#      # Étape principale : compilation de tous les microservices avec le build-wrapper
-#      - name: Build all microservices with Build Wrapper
+#      - name: Configure & build each microservice (CMake)
+#        shell: bash
 #        run: |
-#          set -e
+#          set -euo pipefail
+#          # Adapte le glob ci-dessous à ton arbo (ex: services/*/ ou microservices/*/)
+#          for d in */; do
+#            [[ -f "$d/CMakeLists.txt" ]] || continue
+#            echo "==> $d"
+#            # On supprime toujours le build local pour éviter tout CMakeCache vérolé
+#            rm -rf "$d/build"
+#            cmake -S "$d" -B "$d/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+#            cmake --build "$d/build" -- -v
+#          done
+#
+#      - name: Merge compile_commands.json
+#        run: |
 #          mkdir -p bw-output
-#          BUILD_WRAPPER=./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+#          # Récupère tous les fichiers compile_commands.json générés par CMake
+#          files=$(find . -path "*/build/compile_commands.json" -type f)
+#          if [ -z "$files" ]; then
+#            echo "Aucun compile_commands.json trouvé" >&2
+#            exit 1
+#          fi
+#          # Fusion JSON propre avec jq
+#          jq -s 'add' $files > bw-output/compile_commands.json
+#          test -s bw-output/compile_commands.json
 #
-#          for service in auth-service files-service messaging-service audit-service; do
-#            echo "=== Building $service ==="
-#            rm -rf $service/build
-#            mkdir -p $service/build
-#            cd $service/build
-#
-#            cmake -DCMAKE_BUILD_TYPE=Debug \
-#                  -DCMAKE_CXX_FLAGS="--coverage" \
-#                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-#
-#            # Compilation avec build-wrapper
-#            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
-#
-#            cd ../..
-#          done
-#
-#          # Fusion des fichiers compile_commands.json
-#          echo "[" > bw-output/compile_commands.json
-#          first=true
-#          for service in auth-service files-service messaging-service audit-service; do
-#            f="$service/build/compile_commands.json"
-#            if [ -s "$f" ]; then
-#              if [ "$first" = true ]; then
-#                first=false
-#              else
-#                echo "," >> bw-output/compile_commands.json
-#              fi
-#              sed '1d;$d' "$f" >> bw-output/compile_commands.json
-#            fi
-#          done
-#          echo "]" >> bw-output/compile_commands.json
-#
-#      # Lancement de l'analyse SonarCloud
 #      - name: Run SonarCloud Scan
 #        uses: SonarSource/sonarcloud-github-action@v2
 #        env:
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #        with:
 #          args: >
-#            -Dsonar.projectKey=drvba_secure-cloud
-#            -Dsonar.organization=drvba
+#            -Dsonar.host.url=https://sonarcloud.io
+#            -Dsonar.organization=secure-cloud
+#            -Dsonar.projectKey=barbara-vanni_secure-cloud
 #            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
+#            -X
+
 name: SonarCloud C++ Analysis
 
 on:
@@ -110,17 +105,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # recommandé par Sonar pour l'annotation PR
-
-      # Optionnel mais utile : purge tout artefact local éventuel
-      - name: Clean workspace (sûr en CI)
-        run: |
-          git clean -fdx
-
-      - name: Install build tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y cmake g++ ninja-build jq
+          fetch-depth: 0  # recommandé pour l’annotation des PR
 
       - name: Install system dev packages
         run: |
@@ -134,44 +119,62 @@ jobs:
             zlib1g-dev \
             libssl-dev \
             nlohmann-json3-dev \
-            libmysqlclient-dev \
             git \
-            cmake g++ ninja-build jq pkg-config
-          
+            cmake g++ gcc ninja-build jq pkg-config
+
+      # Drogon sans MySQL (évite les soucis de détection MySQL sur Ubuntu 24.04)
       - name: Build Drogon from source (no MySQL)
         run: |
           git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
           cd drogon
           mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
-          sudo cmake --build . --target install -j$(nproc)
+          cmake .. -DCMAKE_BUILD_TYPE=Release \
+                   -DBUILD_MYSQL=OFF \
+                   -DBUILD_POSTGRESQL=ON \
+                   -DBUILD_SQLITE=ON \
+                   -DBUILD_REDIS=OFF \
+                   -DBUILD_BROTLI=OFF
+          sudo cmake --build . --target install -j"$(nproc)"
 
+      # Nettoyage pour repartir d’un workspace propre
+      - name: Clean workspace
+        run: git clean -fdx
+
+      # Adapte le glob si besoin (ex: services/*/ ou microservices/*/)
       - name: Configure & build each microservice (CMake)
         shell: bash
         run: |
           set -euo pipefail
-          # Adapte le glob ci-dessous à ton arbo (ex: services/*/ ou microservices/*/)
           for d in */; do
             [[ -f "$d/CMakeLists.txt" ]] || continue
             echo "==> $d"
-            # On supprime toujours le build local pour éviter tout CMakeCache vérolé
             rm -rf "$d/build"
-            cmake -S "$d" -B "$d/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            cmake -S "$d" -B "$d/build" -G Ninja \
+              -DCMAKE_BUILD_TYPE=Release \
+              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+              -DCMAKE_C_COMPILER=/usr/bin/gcc \
+              -DCMAKE_CXX_COMPILER=/usr/bin/g++
             cmake --build "$d/build" -- -v
           done
 
       - name: Merge compile_commands.json
         run: |
           mkdir -p bw-output
-          # Récupère tous les fichiers compile_commands.json générés par CMake
           files=$(find . -path "*/build/compile_commands.json" -type f)
           if [ -z "$files" ]; then
             echo "Aucun compile_commands.json trouvé" >&2
             exit 1
           fi
-          # Fusion JSON propre avec jq
           jq -s 'add' $files > bw-output/compile_commands.json
           test -s bw-output/compile_commands.json
+
+      # (Optionnel) Vérifie qu’on n’a plus de "c++" dans compile_commands.json
+      - name: Sanity check compile_commands
+        run: |
+          if grep -q '"command": "c\+\+' bw-output/compile_commands.json; then
+            echo "ERREUR: présence de 'c++' dans compile_commands.json"; exit 1;
+          fi
+          grep -E '"command": "(/usr/bin/)?g\+\+' -m 1 bw-output/compile_commands.json || { echo "ERREUR: pas de g++ détecté"; exit 1; }
 
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
@@ -183,4 +186,5 @@ jobs:
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
-            -X
+            -Dsonar.projectVersion=${{ github.run_number }}
+            -Dsonar.verbose=true
