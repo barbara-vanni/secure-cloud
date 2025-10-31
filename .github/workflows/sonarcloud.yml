@@ -140,7 +140,7 @@ jobs:
           
       - name: Build Drogon from source (no MySQL)
         run: |
-          git clone --branch v1.8.7 --depth 1 https://github.com/drogonframework/drogon.git
+          git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
           cd drogon
           mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
