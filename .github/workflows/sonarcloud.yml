@@ -135,7 +135,6 @@ jobs:
             libssl-dev \
             nlohmann-json3-dev \
             libdrogon-dev libtrantor-dev \
-            # <-- ajoute ces lignes :
             libmysqlclient-dev default-libmysqlclient-dev \
             libmariadb-dev libmariadb-dev-compat \
             git \
