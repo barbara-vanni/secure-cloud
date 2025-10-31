@@ -105,7 +105,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # recommandé pour l’annotation des PR
+          fetch-depth: 0
 
       - name: Install system dev packages
         run: |
@@ -120,9 +120,9 @@ jobs:
             libssl-dev \
             nlohmann-json3-dev \
             git \
-            cmake g++ gcc ninja-build jq pkg-config
+            cmake g++ gcc ninja-build jq pkg-config curl unzip
 
-      # Drogon sans MySQL (évite les soucis de détection MySQL sur Ubuntu 24.04)
+      # Drogon sans MySQL (évite les soucis MySQL sur Ubuntu 24.04)
       - name: Build Drogon from source (no MySQL)
         run: |
           git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
@@ -136,45 +136,44 @@ jobs:
                    -DBUILD_BROTLI=OFF
           sudo cmake --build . --target install -j"$(nproc)"
 
-      # Nettoyage pour repartir d’un workspace propre
       - name: Clean workspace
         run: git clean -fdx
 
+      # Téléchargement du build-wrapper
+      - name: Download SonarCloud build-wrapper
+        run: |
+          curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -o build-wrapper.zip
+
       # Adapte le glob si besoin (ex: services/*/ ou microservices/*/)
-      - name: Configure & build each microservice (CMake)
+      - name: Configure each microservice (CMake)
         shell: bash
         run: |
           set -euo pipefail
           for d in */; do
             [[ -f "$d/CMakeLists.txt" ]] || continue
-            echo "==> $d"
+            echo "==> Configure $d"
             rm -rf "$d/build"
             cmake -S "$d" -B "$d/build" -G Ninja \
               -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
               -DCMAKE_C_COMPILER=/usr/bin/gcc \
               -DCMAKE_CXX_COMPILER=/usr/bin/g++
-            cmake --build "$d/build" -- -v
           done
 
-      - name: Merge compile_commands.json
+      - name: Build all microservices with build-wrapper
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p bw-output
-          files=$(find . -path "*/build/compile_commands.json" -type f)
-          if [ -z "$files" ]; then
-            echo "Aucun compile_commands.json trouvé" >&2
-            exit 1
-          fi
-          jq -s 'add' $files > bw-output/compile_commands.json
-          test -s bw-output/compile_commands.json
-
-      # (Optionnel) Vérifie qu’on n’a plus de "c++" dans compile_commands.json
-      - name: Sanity check compile_commands
-        run: |
-          if grep -q '"command": "c\+\+' bw-output/compile_commands.json; then
-            echo "ERREUR: présence de 'c++' dans compile_commands.json"; exit 1;
-          fi
-          grep -E '"command": "(/usr/bin/)?g\+\+' -m 1 bw-output/compile_commands.json || { echo "ERREUR: pas de g++ détecté"; exit 1; }
+          for d in */; do
+            [[ -d "$d/build" ]] || continue
+            echo "==> Build $d"
+            ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
+              --out-dir bw-output \
+              cmake --build "$d/build" -- -v
+          done
+          # petit contrôle
+          test -f bw-output/build-wrapper-dump.json
 
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
@@ -185,6 +184,6 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.organization=secure-cloud
             -Dsonar.projectKey=barbara-vanni_secure-cloud
-            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
             -Dsonar.projectVersion=${{ github.run_number }}
+            -Dsonar.cfamily.build-wrapper-output=bw-output
             -Dsonar.verbose=true
