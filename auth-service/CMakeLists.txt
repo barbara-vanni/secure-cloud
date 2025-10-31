@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Ne PAS définir CMAKE_TOOLCHAIN_FILE ni OPENSSL_ROOT_DIR ici.
 # Ça vient du profil CMake de CLion (ligne de commande), sinon CMake ne le prend pas au 1er tour.
-
+set(DROGON_NO_MYSQL ON)
 find_package(Drogon CONFIG REQUIRED)
 find_package(CURL REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
