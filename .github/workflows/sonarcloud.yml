@@ -134,24 +134,17 @@ jobs:
             zlib1g-dev \
             libssl-dev \
             nlohmann-json3-dev \
-            libdrogon-dev libtrantor-dev \
             libmysqlclient-dev \
             git \
             cmake g++ ninja-build jq pkg-config
-
-      - name: Fix Drogon MySQL include and lib paths (Ubuntu 24.04)
-        run: |
-          # Crée le lien pour les headers
-          if [ -d /usr/include/mariadb ] && [ ! -d /usr/include/mysql ]; then
-            echo "Creating compatibility symlink /usr/include/mysql -> /usr/include/mariadb"
-            sudo ln -s /usr/include/mariadb /usr/include/mysql
-          fi
           
-          # Crée le lien pour la bibliothèque
-          if [ -f /usr/lib/x86_64-linux-gnu/libmysqlclient.so ] && [ ! -f /usr/lib/libmysqlclient.so ]; then
-            echo "Creating compatibility symlink /usr/lib/libmysqlclient.so -> /usr/lib/x86_64-linux-gnu/libmysqlclient.so"
-            sudo ln -s /usr/lib/x86_64-linux-gnu/libmysqlclient.so /usr/lib/libmysqlclient.so
-          fi
+      - name: Build Drogon from source (no MySQL)
+        run: |
+          git clone --branch v1.8.7 --depth 1 https://github.com/drogonframework/drogon.git
+          cd drogon
+          mkdir build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
+          sudo cmake --build . --target install -j$(nproc)
 
       - name: Configure & build each microservice (CMake)
         shell: bash
