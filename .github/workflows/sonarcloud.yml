@@ -1,3 +1,99 @@
+#name: SonarCloud C++ Analysis
+#
+#on:
+#  push:
+#    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+#
+#jobs:
+#  sonarcloud:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: Install dependencies
+#        run: |
+#          sudo apt update
+#          sudo apt install -y \
+#            cmake g++ \
+#            libjsoncpp-dev \
+#            libssl-dev \
+#            libpq-dev \
+#            libcurl4-openssl-dev \
+#            libsqlite3-dev \
+#            uuid-dev \
+#            zlib1g-dev \
+#            nlohmann-json3-dev \
+#            git
+#
+#
+#          # Installer Drogon depuis la source officielle
+#            git clone --recurse-submodules https://github.com/drogonframework/drogon.git
+#            cd drogon
+#            mkdir build && cd build
+#            cmake ..
+#            sudo make install
+#
+#      # Téléchargement de la bonne version du build-wrapper
+#      - name: Download Build Wrapper
+#        run: |
+#          mkdir -p build-wrapper
+#          curl -L -o build-wrapper/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+#          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper/
+#          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+#
+#      # Étape principale : compilation de tous les microservices avec le build-wrapper
+#      - name: Build all microservices with Build Wrapper
+#        run: |
+#          set -e
+#          mkdir -p bw-output
+#          BUILD_WRAPPER=./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+#
+#          for service in auth-service files-service messaging-service audit-service; do
+#            echo "=== Building $service ==="
+#            rm -rf $service/build
+#            mkdir -p $service/build
+#            cd $service/build
+#
+#            cmake -DCMAKE_BUILD_TYPE=Debug \
+#                  -DCMAKE_CXX_FLAGS="--coverage" \
+#                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+#
+#            # Compilation avec build-wrapper
+#            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
+#
+#            cd ../..
+#          done
+#
+#          # Fusion des fichiers compile_commands.json
+#          echo "[" > bw-output/compile_commands.json
+#          first=true
+#          for service in auth-service files-service messaging-service audit-service; do
+#            f="$service/build/compile_commands.json"
+#            if [ -s "$f" ]; then
+#              if [ "$first" = true ]; then
+#                first=false
+#              else
+#                echo "," >> bw-output/compile_commands.json
+#              fi
+#              sed '1d;$d' "$f" >> bw-output/compile_commands.json
+#            fi
+#          done
+#          echo "]" >> bw-output/compile_commands.json
+#
+#      # Lancement de l'analyse SonarCloud
+#      - name: Run SonarCloud Scan
+#        uses: SonarSource/sonarcloud-github-action@v2
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        with:
+#          args: >
+#            -Dsonar.projectKey=drvba_secure-cloud
+#            -Dsonar.organization=drvba
+#            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
 name: SonarCloud C++ Analysis
 
 on:
@@ -11,86 +107,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # recommandé par Sonar pour l'annotation PR
 
-      - name: Install dependencies
+      - name: Install build tools
         run: |
-          sudo apt update
-          sudo apt install -y \
-            cmake g++ \
-            libjsoncpp-dev \
-            libssl-dev \
-            libpq-dev \
-            libcurl4-openssl-dev \
-            libsqlite3-dev \
-            uuid-dev \
-            zlib1g-dev \
-            nlohmann-json3-dev \
-            git
-          
-          
-          # Installer Drogon depuis la source officielle
-            git clone --recurse-submodules https://github.com/drogonframework/drogon.git
-            cd drogon
-            mkdir build && cd build
-            cmake ..
-            sudo make install
+          sudo apt-get update
+          sudo apt-get install -y cmake g++ ninja-build jq
 
-      # Téléchargement de la bonne version du build-wrapper
-      - name: Download Build Wrapper
+      # Adapte le glob à ta structure (ex: services/*/ ou microservices/*/)
+      - name: Configure & build each microservice (CMake)
+        shell: bash
         run: |
-          mkdir -p build-wrapper
-          curl -L -o build-wrapper/build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip -o build-wrapper/build-wrapper-linux-x86.zip -d build-wrapper/
-          chmod +x build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+          set -euo pipefail
+          for d in */; do
+            [[ -f "$d/CMakeLists.txt" ]] || continue
+            echo "==> Configure $d"
+            cmake -S "$d" -B "$d/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+            echo "==> Build $d"
+            cmake --build "$d/build" -- -v
+          done
 
-      # Étape principale : compilation de tous les microservices avec le build-wrapper
-      - name: Build all microservices with Build Wrapper
+      - name: Merge compile_commands.json
         run: |
-          set -e
           mkdir -p bw-output
-          BUILD_WRAPPER=./build-wrapper/build-wrapper-linux-x86/build-wrapper-linux-x86-64
+          # Récupère tous les fichiers compile_commands.json générés par CMake
+          files=$(find . -path "*/build/compile_commands.json" -type f)
+          if [ -z "$files" ]; then
+            echo "Aucun compile_commands.json trouvé" >&2
+            exit 1
+          fi
+          # Fusion JSON propre avec jq
+          jq -s 'add' $files > bw-output/compile_commands.json
+          test -s bw-output/compile_commands.json
 
-          for service in auth-service files-service messaging-service audit-service; do
-            echo "=== Building $service ==="
-            rm -rf $service/build
-            mkdir -p $service/build
-            cd $service/build
-
-            cmake -DCMAKE_BUILD_TYPE=Debug \
-                  -DCMAKE_CXX_FLAGS="--coverage" \
-                  -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-          
-            # Compilation avec build-wrapper
-            $BUILD_WRAPPER --out-dir ../../bw-output/$service make -j$(nproc)
-
-            cd ../..
-          done
-
-          # Fusion des fichiers compile_commands.json
-          echo "[" > bw-output/compile_commands.json
-          first=true
-          for service in auth-service files-service messaging-service audit-service; do
-            f="$service/build/compile_commands.json"
-            if [ -s "$f" ]; then
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "," >> bw-output/compile_commands.json
-              fi
-              sed '1d;$d' "$f" >> bw-output/compile_commands.json
-            fi
-          done
-          echo "]" >> bw-output/compile_commands.json
-
-      # Lancement de l'analyse SonarCloud
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=drvba_secure-cloud
             -Dsonar.organization=drvba
+            -Dsonar.projectKey=drvba_secure-cloud
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
