@@ -135,10 +135,10 @@ jobs:
             libssl-dev \
             nlohmann-json3-dev \
             libdrogon-dev libtrantor-dev \
-            libmysqlclient-dev default-libmysqlclient-dev \
-            libmariadb-dev libmariadb-dev-compat \
+            libmysqlclient-dev \
             git \
             cmake g++ ninja-build jq pkg-config
+
 
       - name: Configure & build each microservice (CMake)
         shell: bash
