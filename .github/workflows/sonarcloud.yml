@@ -122,6 +122,16 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y cmake g++ ninja-build jq
 
+      - name: Install system dev packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libcurl4-openssl-dev \
+            libssl-dev \
+            nlohmann-json3-dev \
+            libdrogon-dev libtrantor-dev \
+            cmake g++ ninja-build jq pkg-config
+
       - name: Configure & build each microservice (CMake)
         shell: bash
         run: |
