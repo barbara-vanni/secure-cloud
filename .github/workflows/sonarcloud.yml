@@ -122,42 +122,36 @@ jobs:
             git \
             cmake g++ gcc ninja-build jq pkg-config curl unzip
 
-      # Drogon sans MySQL (évite les soucis MySQL sur Ubuntu 24.04)
+      # Drogon sans MySQL (évite les soucis MySQL)
       - name: Build Drogon from source (no MySQL)
         run: |
           git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
-          cd drogon
-          mkdir build && cd build
+          cd drogon && mkdir build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release \
-                   -DBUILD_MYSQL=OFF \
-                   -DBUILD_POSTGRESQL=ON \
-                   -DBUILD_SQLITE=ON \
-                   -DBUILD_REDIS=OFF \
-                   -DBUILD_BROTLI=OFF
+                   -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON \
+                   -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
           sudo cmake --build . --target install -j"$(nproc)"
 
-      - name: Clean workspace
-        run: git clean -fdx
-
-      # Téléchargement du build-wrapper
+      # Télécharger le build-wrapper
       - name: Download SonarCloud build-wrapper
         run: |
           curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -o build-wrapper.zip
 
-      # Adapte le glob si besoin (ex: services/*/ ou microservices/*/)
+      # ⚠️ Adapte le glob si besoin (ex: services/*/). Idéalement, liste explicitement les services que tu veux analyser.
       - name: Configure each microservice (CMake)
         shell: bash
         run: |
           set -euo pipefail
-          for d in */; do
-            [[ -f "$d/CMakeLists.txt" ]] || continue
-            echo "==> Configure $d"
-            rm -rf "$d/build"
-            cmake -S "$d" -B "$d/build" -G Ninja \
-              -DCMAKE_BUILD_TYPE=Release \
-              -DCMAKE_C_COMPILER=/usr/bin/gcc \
-              -DCMAKE_CXX_COMPILER=/usr/bin/g++
+          for d in audit-service auth-service files-service messaging-service; do
+            if [[ -f "$d/CMakeLists.txt" ]]; then
+              echo "==> Configure $d"
+              rm -rf "$d/build"
+              cmake -S "$d" -B "$d/build" -G Ninja \
+                -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_C_COMPILER=/usr/bin/gcc \
+                -DCMAKE_CXX_COMPILER=/usr/bin/g++
+            fi
           done
 
       - name: Build all microservices with build-wrapper
@@ -165,15 +159,27 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p bw-output
-          for d in */; do
-            [[ -d "$d/build" ]] || continue
-            echo "==> Build $d"
-            ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
-              --out-dir bw-output \
-              cmake --build "$d/build" -- -v
+          for d in audit-service auth-service files-service messaging-service; do
+            if [[ -d "$d/build" ]]; then
+              echo "==> Build $d"
+              ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
+                --out-dir bw-output \
+                cmake --build "$d/build" -- -v
+            else
+              echo "SKIP $d (pas de build)"
+            fi
           done
-          # petit contrôle
           test -f bw-output/build-wrapper-dump.json
+
+      # (Optionnel) Exclure les dossiers non construits pour éviter 0 unités
+      - name: Compute Sonar exclusions
+        id: excl
+        shell: bash
+        run: |
+          excl="drogon/**,**/build/**,**/tests/**"
+          [[ ! -d files-service/build ]] && excl="$excl,files-service/**"
+          [[ ! -d messaging-service/build ]] && excl="$excl,messaging-service/**"
+          echo "exclusions=$excl" >> "$GITHUB_OUTPUT"
 
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
@@ -186,4 +192,5 @@ jobs:
             -Dsonar.projectKey=barbara-vanni_secure-cloud
             -Dsonar.projectVersion=${{ github.run_number }}
             -Dsonar.cfamily.build-wrapper-output=bw-output
+            -Dsonar.exclusions=${{ steps.excl.outputs.exclusions }}
             -Dsonar.verbose=true
