@@ -127,9 +127,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libcurl4-openssl-dev \
+            libjsoncpp-dev \
+            libpq-dev \
+            libsqlite3-dev \
+            uuid-dev \
+            zlib1g-dev \
             libssl-dev \
             nlohmann-json3-dev \
             libdrogon-dev libtrantor-dev \
+            git \
             cmake g++ ninja-build jq pkg-config
 
       - name: Configure & build each microservice (CMake)
