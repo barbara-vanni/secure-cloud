@@ -14,13 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Outils build & utilitaires (jq pour réécrire les paths, unzip/curl pour télécharger les outils)
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build unzip curl git jq
+          sudo apt-get install -y build-essential cmake ninja-build unzip curl git
 
-      # vcpkg pour les find_package (Drogon / CURL / nlohmann_json)
       - name: Install vcpkg
         run: |
           git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
@@ -30,13 +28,11 @@ jobs:
         run: |
           "${{ github.workspace }}/vcpkg/vcpkg" install drogon curl[openssl] nlohmann-json --triplet x64-linux
 
-      # build-wrapper (Linux)
       - name: Download build-wrapper
         run: |
           curl -sSLo bw.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -q bw.zip
 
-      # Configure (NON wrapé)
       - name: Configure project
         run: |
           rm -rf build bw-output
@@ -46,38 +42,26 @@ jobs:
             -DVCPKG_TARGET_TRIPLET=x64-linux \
             -DCMAKE_FIND_PACKAGE_PREFER_CONFIG=ON
 
-      # Build (WRAPÉ) -> produit bw-output/compile_commands.json
       - name: Build (wrapped)
         run: |
           ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
             --out-dir bw-output \
             ninja -C build
 
-      # Normaliser les chemins absolus pour l’environnement d’analyse (/github/workspace)
-      - name: Normalize compile_commands.json paths for analysis
+      # (Optionnel) Inspecter le fichier pour s'assurer que les chemins sont ceux du runner,
+      # c.-à-d. /home/runner/work/secure-cloud/secure-cloud/...
+      - name: Show first entries of compile_commands.json
         run: |
-          FROM_PATH="${GITHUB_WORKSPACE}"
-          TO_PATH="/github/workspace"
-          test -f bw-output/compile_commands.json || { echo "compile_commands.json introuvable"; exit 1; }
-          jq --arg from "$FROM_PATH" --arg to "$TO_PATH" '
-            map(
-              .directory = (.directory | gsub($from; $to)) |
-              .file      = (.file      | gsub($from; $to))
-            )' bw-output/compile_commands.json > bw-output/compile_commands.fixed.json
-          mv bw-output/compile_commands.fixed.json bw-output/compile_commands.json
-          mkdir -p build   # s'assure que /github/workspace/build existe pendant le scan
+          head -n 100 bw-output/compile_commands.json || true
 
-      # Télécharger le SonarScanner CLI (exécution "natif" glibc, pas de Docker Alpine)
       - name: Download SonarScanner CLI
         run: |
           SCAN_VER="5.0.1.3006"
           curl -sSLo sonar-scanner.zip "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SCAN_VER}-linux.zip"
           unzip -q sonar-scanner.zip
           mv "sonar-scanner-${SCAN_VER}-linux" sonar-scanner
-          # Chemin Java : GitHub runner en a déjà un, sinon:
           java -version
 
-      # Lancer l'analyse SonarCloud en ligne de commande
       - name: Run SonarCloud Scan (CLI)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -88,5 +72,4 @@ jobs:
             -Dsonar.projectKey=barbara-vanni_secure-cloud \
             -Dsonar.projectVersion=${{ github.run_number }} \
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json \
-            -Dsonar.verbose=true \
-            -Dsonar.exclusions="${{ steps.excl.outputs.exclusions }}"
+            -Dsonar.verbose=true
