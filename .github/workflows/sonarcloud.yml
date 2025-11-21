@@ -14,33 +14,45 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # (Optionnel) installe les outils de build de base. À garder si ton projet en a besoin.
       - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential cmake ninja-build unzip curl
+          sudo apt-get install -y build-essential cmake ninja-build unzip curl git
 
-      # 1) Récupère le build-wrapper (Linux)
+      # >>> AJOUT 1/2 : installer vcpkg
+      - name: Install vcpkg
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
+          "${{ github.workspace }}/vcpkg/bootstrap-vcpkg.sh" -disableMetrics
+
+      # >>> AJOUT 2/2 : installer Drogon via vcpkg (et deps)
+      - name: Install Drogon (vcpkg)
+        run: |
+          "${{ github.workspace }}/vcpkg/vcpkg" install drogon --triplet x64-linux
+        # (optionnel) activer un cache vcpkg pour accélérer les runs suivants
+
       - name: Download build-wrapper
         run: |
           curl -sSLo bw.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
           unzip -q bw.zip
 
-      # 2) Configure (NON wrapé) — adapte si tu n'utilises pas CMake
+      # Configure (NON wrapé) — on indique le toolchain vcpkg à CMake
       - name: Configure project
         run: |
           rm -rf build bw-output
-          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET=x64-linux
 
-      # 3) Build (WRAPÉ) — c’est cette étape qui alimente bw-output/
-      #    Si tu utilises make : remplace "ninja -C build" par "make -C build -j"
+      # Build (WRAPÉ) — alimente bw-output/
       - name: Build (wrapped)
         run: |
           ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
             --out-dir bw-output \
             ninja -C build
 
-      # === Ton step existant, inchangé ===
+      # Ton step SonarCloud existant (inchangé)
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
