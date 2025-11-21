@@ -1,95 +1,4 @@
-#name: SonarCloud C++ Analysis
-#
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
-#
-#jobs:
-#  sonarcloud:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0  # recommandé par Sonar pour l'annotation PR
-#
-#      # Optionnel mais utile : purge tout artefact local éventuel
-#      - name: Clean workspace (sûr en CI)
-#        run: |
-#          git clean -fdx
-#
-#      - name: Install build tools
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get install -y cmake g++ ninja-build jq
-#
-#      - name: Install system dev packages
-#        run: |
-#          sudo apt-get update
-#          sudo apt-get install -y \
-#            libcurl4-openssl-dev \
-#            libjsoncpp-dev \
-#            libpq-dev \
-#            libsqlite3-dev \
-#            uuid-dev \
-#            zlib1g-dev \
-#            libssl-dev \
-#            nlohmann-json3-dev \
-#            libmysqlclient-dev \
-#            git \
-#            cmake g++ ninja-build jq pkg-config
-#
-#      - name: Build Drogon from source (no MySQL)
-#        run: |
-#          git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
-#          cd drogon
-#          mkdir build && cd build
-#          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
-#          sudo cmake --build . --target install -j$(nproc)
-#
-#      - name: Configure & build each microservice (CMake)
-#        shell: bash
-#        run: |
-#          set -euo pipefail
-#          # Adapte le glob ci-dessous à ton arbo (ex: services/*/ ou microservices/*/)
-#          for d in */; do
-#            [[ -f "$d/CMakeLists.txt" ]] || continue
-#            echo "==> $d"
-#            # On supprime toujours le build local pour éviter tout CMakeCache vérolé
-#            rm -rf "$d/build"
-#            cmake -S "$d" -B "$d/build" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
-#            cmake --build "$d/build" -- -v
-#          done
-#
-#      - name: Merge compile_commands.json
-#        run: |
-#          mkdir -p bw-output
-#          # Récupère tous les fichiers compile_commands.json générés par CMake
-#          files=$(find . -path "*/build/compile_commands.json" -type f)
-#          if [ -z "$files" ]; then
-#            echo "Aucun compile_commands.json trouvé" >&2
-#            exit 1
-#          fi
-#          # Fusion JSON propre avec jq
-#          jq -s 'add' $files > bw-output/compile_commands.json
-#          test -s bw-output/compile_commands.json
-#
-#      - name: Run SonarCloud Scan
-#        uses: SonarSource/sonarcloud-github-action@v2
-#        env:
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#        with:
-#          args: >
-#            -Dsonar.host.url=https://sonarcloud.io
-#            -Dsonar.organization=secure-cloud
-#            -Dsonar.projectKey=barbara-vanni_secure-cloud
-#            -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json
-#            -X
-
-name: SonarCloud C++ Analysis
+name: SonarCloud
 
 on:
   push:
@@ -98,89 +7,40 @@ on:
     branches: [ main ]
 
 jobs:
-  sonarcloud:
+  sonar:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Install system dev packages
+      # (Optionnel) installe les outils de build de base. À garder si ton projet en a besoin.
+      - name: Install build tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y \
-            libcurl4-openssl-dev \
-            libjsoncpp-dev \
-            libpq-dev \
-            libsqlite3-dev \
-            uuid-dev \
-            zlib1g-dev \
-            libssl-dev \
-            nlohmann-json3-dev \
-            git \
-            cmake g++ gcc ninja-build jq pkg-config curl unzip
+          sudo apt-get install -y build-essential cmake ninja-build unzip curl
 
-      # Drogon sans MySQL (évite les soucis MySQL)
-      - name: Build Drogon from source (no MySQL)
+      # 1) Récupère le build-wrapper (Linux)
+      - name: Download build-wrapper
         run: |
-          git clone --branch v1.8.7 --recurse-submodules https://github.com/drogonframework/drogon.git
-          cd drogon && mkdir build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release \
-                   -DBUILD_MYSQL=OFF -DBUILD_POSTGRESQL=ON -DBUILD_SQLITE=ON \
-                   -DBUILD_REDIS=OFF -DBUILD_BROTLI=OFF
-          sudo cmake --build . --target install -j"$(nproc)"
+          curl -sSLo bw.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip -q bw.zip
 
-      # Télécharger le build-wrapper
-      - name: Download SonarCloud build-wrapper
+      # 2) Configure (NON wrapé) — adapte si tu n'utilises pas CMake
+      - name: Configure project
         run: |
-          curl -sSLo build-wrapper.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip -o build-wrapper.zip
+          rm -rf build bw-output
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
-      # ⚠️ Adapte le glob si besoin (ex: services/*/). Idéalement, liste explicitement les services que tu veux analyser.
-      - name: Configure each microservice (CMake)
-        shell: bash
+      # 3) Build (WRAPÉ) — c’est cette étape qui alimente bw-output/
+      #    Si tu utilises make : remplace "ninja -C build" par "make -C build -j"
+      - name: Build (wrapped)
         run: |
-          set -euo pipefail
-          for d in audit-service auth-service files-service messaging-service; do
-            if [[ -f "$d/CMakeLists.txt" ]]; then
-              echo "==> Configure $d"
-              rm -rf "$d/build"
-              cmake -S "$d" -B "$d/build" -G Ninja \
-                -DCMAKE_BUILD_TYPE=Release \
-                -DCMAKE_C_COMPILER=/usr/bin/gcc \
-                -DCMAKE_CXX_COMPILER=/usr/bin/g++
-            fi
-          done
+          ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
+            --out-dir bw-output \
+            ninja -C build
 
-      - name: Build all microservices with build-wrapper
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p bw-output
-          for d in audit-service auth-service files-service messaging-service; do
-            if [[ -d "$d/build" ]]; then
-              echo "==> Build $d"
-              ./build-wrapper-linux-x86/build-wrapper-linux-x86-64 \
-                --out-dir bw-output \
-                cmake --build "$d/build" -- -v
-            else
-              echo "SKIP $d (pas de build)"
-            fi
-          done
-          test -f bw-output/build-wrapper-dump.json
-
-      # (Optionnel) Exclure les dossiers non construits pour éviter 0 unités
-      - name: Compute Sonar exclusions
-        id: excl
-        shell: bash
-        run: |
-          excl="drogon/**,**/build/**,**/tests/**"
-          [[ ! -d files-service/build ]] && excl="$excl,files-service/**"
-          [[ ! -d messaging-service/build ]] && excl="$excl,messaging-service/**"
-          echo "exclusions=$excl" >> "$GITHUB_OUTPUT"
-
+      # === Ton step existant, inchangé ===
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
