@@ -26,10 +26,11 @@ jobs:
           git clone https://github.com/microsoft/vcpkg.git "${{ github.workspace }}/vcpkg"
           "${{ github.workspace }}/vcpkg/bootstrap-vcpkg.sh" -disableMetrics
 
-      # Dépendances C++ via vcpkg (Drogon + CURL)
-      - name: Install Drogon and CURL (vcpkg)
+      # Dépendances via vcpkg
+      # ⚠️ Ajout de nlohmann-json pour satisfaire find_package(nlohmann_json)
+      - name: Install C++ deps (vcpkg)
         run: |
-          "${{ github.workspace }}/vcpkg/vcpkg" install drogon curl[openssl] --triplet x64-linux
+          "${{ github.workspace }}/vcpkg/vcpkg" install drogon curl[openssl] nlohmann-json --triplet x64-linux
 
       # Récupérer le build-wrapper SonarCloud (Linux)
       - name: Download build-wrapper
@@ -54,7 +55,7 @@ jobs:
             --out-dir bw-output \
             ninja -C build
 
-      # Scan SonarCloud (ton step existant, inchangé)
+      # Scan SonarCloud
       - name: Run SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
