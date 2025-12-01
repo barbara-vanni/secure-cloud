@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Install build tools
         run: |
@@ -65,11 +67,15 @@ jobs:
       - name: Run SonarCloud Scan (CLI)
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./sonar-scanner/bin/sonar-scanner \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.organization=secure-cloud \
             -Dsonar.projectKey=barbara-vanni_secure-cloud \
             -Dsonar.projectVersion=${{ github.run_number }} \
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
+            -Dsonar.pullrequest.branch=${{ github.head_ref }} \
+            -Dsonar.pullrequest.base=${{ github.base_ref }} \
             -Dsonar.cfamily.compile-commands=bw-output/compile_commands.json \
             -Dsonar.verbose=true
