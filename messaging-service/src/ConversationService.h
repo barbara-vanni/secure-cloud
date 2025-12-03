@@ -1,0 +1,13 @@
+//
+// Created by walid on 03/12/2025.
+//
+
+#ifndef SECURE_CLOUD_CONVERSATIONSERVICE_H
+#define SECURE_CLOUD_CONVERSATIONSERVICE_H
+
+
+class ConversationService {
+};
+
+
+#endif //SECURE_CLOUD_CONVERSATIONSERVICE_H
