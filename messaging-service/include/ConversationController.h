@@ -24,6 +24,10 @@ public:
     // GET /conversations/{id} → conversation details by ID
     ADD_METHOD_TO(ConversationController::getConversation,
                   "/conversations/{id}", drogon::Get);
+
+    // PATCH /conversations/{id} → update conversation (only name if you're owner )
+    ADD_METHOD_TO(ConversationController::updateConversation,
+              "/conversations/{id}", drogon::Patch);
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -35,6 +39,10 @@ public:
     void getConversation(const drogon::HttpRequestPtr& req,
                          std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                          const std::string& conversationId) const;
+
+    void updateConversation(const drogon::HttpRequestPtr& req,
+                        std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                        const std::string& conversationId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

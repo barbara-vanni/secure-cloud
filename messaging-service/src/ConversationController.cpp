@@ -28,6 +28,14 @@ HttpResponsePtr makeJsonError(HttpStatusCode code, const std::string& msg) {
     return r;
 }
 
+HttpResponsePtr badRequest(const std::string& msg) {
+    return makeJsonError(drogon::k400BadRequest, msg);
+}
+
+HttpResponsePtr unauthorized(const std::string& msg) {
+    return makeJsonError(drogon::k401Unauthorized, msg);
+}
+
 } // namespace
 
 void ConversationController::createConversation(
@@ -121,6 +129,47 @@ void ConversationController::getConversation(
 
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(static_cast<HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
+    return cb(resp);
+}
+
+void ConversationController::updateConversation(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+    const std::string& conversationId) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(unauthorized("Missing Bearer access token"));
+    }
+
+    if (conversationId.empty()) {
+        return cb(badRequest("Missing conversation id"));
+    }
+
+    const auto body = req->getJsonObject();
+    if (!body) {
+        return cb(badRequest("Body must be JSON"));
+    }
+
+    std::optional<std::string> name;
+    if (body->isMember("name")) {
+        if (!(*body)["name"].isString()) {
+            return cb(badRequest("Field 'name' must be a string"));
+        }
+        name = (*body)["name"].asString();
+    }
+
+    if (!name.has_value()) {
+        return cb(badRequest("Nothing to update (expecting at least 'name')"));
+    }
+
+    ConversationService service;
+    auto result = service.updateConversation(token, conversationId, name);
+
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<drogon::HttpStatusCode>(result.statusCode));
     resp->setContentTypeCode(CT_APPLICATION_JSON);
     resp->setBody(result.body.dump());
     return cb(resp);

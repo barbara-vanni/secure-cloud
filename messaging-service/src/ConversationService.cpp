@@ -391,6 +391,143 @@ bool fetchConversationById(const SupabaseEnv& env,
     return true;
 }
 
+// ------------- Helper 7: Check update rights ----------
+bool checkConversationUpdateRights(const SupabaseEnv& env,
+                                   const std::string& profileId,
+                                   const std::string& conversationId,
+                                   std::string& outRole,
+                                   ConversationService::Result& errOut) {
+    std::string url = env.base +
+        "/rest/v1/conversation_members"
+        "?select=role"
+        "&user_id=eq." + profileId +
+        "&conversation_id=eq." + conversationId +
+        "&left_at=is.null"
+        "&limit=1";
+
+    CURL* c = curl_easy_init();
+    if (!c) {
+        errOut = makeError(500, "curl init failed (checkConversationUpdateRights)");
+        return false;
+    }
+
+    std::string resp;
+    long httpCode = 0;
+    struct curl_slist* h = nullptr;
+    h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+    h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+    h = curl_slist_append(h, "Content-Type: application/json");
+
+    curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+    curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+    curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+    auto res = curl_easy_perform(c);
+    curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+    curl_slist_free_all(h);
+    curl_easy_cleanup(c);
+
+    if (res != CURLE_OK) {
+        errOut = makeError(500, "curl perform failed (checkConversationUpdateRights)");
+        return false;
+    }
+
+    if (httpCode != 200) {
+        ConversationService::Result r;
+        r.statusCode = static_cast<int>(httpCode);
+        r.body = resp.empty() ? nlohmann::json::object() : nlohmann::json::parse(resp, nullptr, false);
+        if (r.body.is_discarded()) r.body = nlohmann::json::object();
+        errOut = r;
+        return false;
+    }
+
+    auto j = nlohmann::json::parse(resp, nullptr, false);
+    if (j.is_discarded() || !j.is_array() || j.empty()) {
+        errOut = makeError(404, "Conversation not found or user is not a member");
+        return false;
+    }
+
+    auto role = j[0].value("role", std::string{});
+    if (role != "owner" && role != "admin") {
+        errOut = makeError(403, "User is not allowed to update this conversation");
+        return false;
+    }
+
+    outRole = role;
+    return true;
+}
+
+// ------------- Helper 8: Update conversation name ----------
+    bool patchConversationRow(const SupabaseEnv& env,
+                          const std::string& conversationId,
+                          const nlohmann::json& payload,
+                          nlohmann::json& out,
+                          ConversationService::Result& errOut) {
+    std::string url = env.base +
+        "/rest/v1/conversations?id=eq." + conversationId;
+
+    CURL* c = curl_easy_init();
+    if (!c) {
+        errOut = makeError(500, "curl init failed (patchConversationRow)");
+        return false;
+    }
+
+    std::string resp;
+    long httpCode = 0;
+    struct curl_slist* h = nullptr;
+    h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+    h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+    h = curl_slist_append(h, "Content-Type: application/json");
+    h = curl_slist_append(h, "Prefer: return=representation");
+
+    const std::string body = payload.dump();
+
+    curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+    curl_easy_setopt(c, CURLOPT_CUSTOMREQUEST, "PATCH");
+    curl_easy_setopt(c, CURLOPT_POSTFIELDS, body.c_str());
+    curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+    curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+    auto res = curl_easy_perform(c);
+    curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+    curl_slist_free_all(h);
+    curl_easy_cleanup(c);
+
+    if (res != CURLE_OK) {
+        errOut = makeError(500, "curl perform failed (patchConversationRow)");
+        return false;
+    }
+
+    if (httpCode != 200 && httpCode != 204) {
+        ConversationService::Result r;
+        r.statusCode = static_cast<int>(httpCode);
+        r.body = resp.empty() ? nlohmann::json::object() : nlohmann::json::parse(resp, nullptr, false);
+        if (r.body.is_discarded()) r.body = nlohmann::json::object();
+        errOut = r;
+        return false;
+    }
+
+    if (resp.empty()) {
+        out = nlohmann::json::object();
+        return true;
+    }
+
+    auto j = nlohmann::json::parse(resp, nullptr, false);
+    if (j.is_discarded()) {
+        errOut = makeError(500, "Cannot parse updated conversation from Supabase");
+        return false;
+    }
+
+    out = j;
+    if (j.is_array() && !j.empty()) {
+        out = j[0];
+    }
+
+    return true;
+}
+
 } // namespace
 
 
@@ -554,6 +691,76 @@ ConversationService::Result ConversationService::getConversationById(
         ConversationService::Result r;
         r.statusCode = 200;
         r.body = conv;
+        return r;
+
+    } catch (const std::exception& e) {
+        return makeError(500, e.what());
+    }
+}
+
+ConversationService::Result ConversationService::updateConversation(
+    const std::string& accessToken,
+    const std::string& conversationId,
+    const std::optional<std::string>& name
+) {
+    try {
+        if (accessToken.empty()) {
+            return makeError(401, "Missing Bearer access token");
+        }
+        if (conversationId.empty()) {
+            return makeError(400, "Missing conversation id");
+        }
+        if (!name.has_value()) {
+            return makeError(400, "Nothing to update (expecting at least 'name')");
+        }
+
+        const char* base = std::getenv("SUPABASE_URL");
+        const char* anon = std::getenv("SUPABASE_ANON_KEY");
+        if (!base || !anon) {
+            return makeError(500, "Missing SUPABASE_URL/ANON_KEY");
+        }
+
+        SupabaseEnv env{
+            std::string(base),
+            std::string(anon),
+            accessToken
+        };
+
+        ConversationService::Result err;
+
+        // 1) authUserId
+        std::string authUserId;
+        if (!fetchAuthUserId(env, authUserId, err)) {
+            return err;
+        }
+
+        // 2) profileId
+        std::string profileId;
+        if (!fetchProfileId(env, authUserId, profileId, err)) {
+            return err;
+        }
+
+        // 3) check rights (owner/admin)
+        std::string role;
+        if (!checkConversationUpdateRights(env, profileId, conversationId, role, err)) {
+            return err;
+        }
+
+        // 4) build the update payload
+        nlohmann::json payload;
+        if (name.has_value()) {
+            payload["name"] = *name;
+        }
+
+        // 5) PATCH on conversations
+        nlohmann::json updated;
+        if (!patchConversationRow(env, conversationId, payload, updated, err)) {
+            return err;
+        }
+
+        ConversationService::Result r;
+        r.statusCode = 200;
+        r.body = updated;
         return r;
 
     } catch (const std::exception& e) {
