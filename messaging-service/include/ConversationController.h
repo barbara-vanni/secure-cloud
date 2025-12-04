@@ -16,10 +16,25 @@ public:
       // POST /conversations
       ADD_METHOD_TO(ConversationController::createConversation,
                     "/conversations", drogon::Post);
+
+    // GET /conversations → list all conversations of the current user
+    ADD_METHOD_TO(ConversationController::listConversations,
+                  "/conversations", drogon::Get);
+
+    // GET /conversations/{id} → conversation details by ID
+    ADD_METHOD_TO(ConversationController::getConversation,
+                  "/conversations/{id}", drogon::Get);
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
                             std::function<void (const drogon::HttpResponsePtr &)> &&cb) const;
+
+    void listConversations(const drogon::HttpRequestPtr& req,
+                       std::function<void (const drogon::HttpResponsePtr &)> &&cb) const;
+
+    void getConversation(const drogon::HttpRequestPtr& req,
+                         std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                         const std::string& conversationId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

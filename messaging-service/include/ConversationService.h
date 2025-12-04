@@ -12,18 +12,26 @@
 class ConversationService {
 public:
     struct Result {
-        int statusCode;              // ex: 201, 400, 401, 500...
-        nlohmann::json body;         // payload JSON à renvoyer
+        int statusCode;
+        nlohmann::json body;
     };
 
-    // Crée une conversation :
-    // - récupère l'utilisateur courant via /auth/v1/user
-    // - récupère le profil via /rest/v1/profiles
-    // - crée la conversation via /rest/v1/conversations
+    // Create a new conversation
     Result createConversation(
         const std::string& accessToken,
         const std::string& type,
         const std::optional<std::string>& name
+    );
+
+    // List all conversations where the current user is a member
+    Result listMyConversations(
+        const std::string& accessToken
+    );
+
+    // take the conversationId as parameter
+    Result getConversationById(
+        const std::string& accessToken,
+        const std::string& conversationId
     );
 };
 

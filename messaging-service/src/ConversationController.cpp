@@ -34,7 +34,7 @@ void ConversationController::createConversation(
     const drogon::HttpRequestPtr& req,
     std::function<void (const drogon::HttpResponsePtr &)> &&cb) const {
 
-    // 1) Récupérer et valider le body JSON
+    // 1) Receive and validate the JSON body
     const auto body = req->getJsonObject();
     if (!body) {
         return cb(makeJsonError(k400BadRequest, "Body must be JSON"));
@@ -60,13 +60,13 @@ void ConversationController::createConversation(
         name = (*body)["name"].asString();
     }
 
-    // 2) Récupérer le token Bearer
+    // 2) Take the Bearer token from the Authorization header
     const auto token = getBearerToken(req);
     if (token.empty()) {
         return cb(makeJsonError(k401Unauthorized, "Missing Bearer access token"));
     }
 
-    // 3) Appeler le service métier
+    // 3) Call the business service
     ConversationService service;
     auto result = service.createConversation(
         token,
@@ -74,11 +74,54 @@ void ConversationController::createConversation(
         name
     );
 
-    // 4) Construire la réponse HTTP à partir du résultat
+    // 4) Build the HTTP response from the result
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(static_cast<HttpStatusCode>(result.statusCode));
     resp->setContentTypeCode(CT_APPLICATION_JSON);
     resp->setBody(result.body.dump());
 
+    return cb(resp);
+}
+
+void ConversationController::listConversations(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(makeJsonError(k401Unauthorized, "Missing Bearer access token"));
+    }
+
+    ConversationService service;
+    auto result = service.listMyConversations(token);
+
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
+    return cb(resp);
+}
+
+void ConversationController::getConversation(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+    const std::string& conversationId) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(makeJsonError(k401Unauthorized, "Missing Bearer access token"));
+    }
+
+    if (conversationId.empty()) {
+        return cb(makeJsonError(k400BadRequest, "Missing conversation id"));
+    }
+
+    ConversationService service;
+    auto result = service.getConversationById(token, conversationId);
+
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
     return cb(resp);
 }
