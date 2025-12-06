@@ -41,6 +41,10 @@ public:
     ADD_METHOD_TO(ConversationController::listMembers,
                   "/conversations/{id}/members", drogon::Get);
 
+    // PATCH /conversations/{id}/members/{userId} → update member role
+    ADD_METHOD_TO(ConversationController::updateMemberRole,
+                  "/conversations/{id}/members/{userId}", drogon::Patch);
+
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -68,6 +72,11 @@ public:
     void listMembers(const drogon::HttpRequestPtr& req,
                      std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                      const std::string& conversationId) const;
+
+    void updateMemberRole(const drogon::HttpRequestPtr& req,
+                      std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                      const std::string& conversationId,
+                      const std::string& userId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

@@ -257,3 +257,45 @@ void ConversationController::listMembers(
     resp->setBody(result.body.dump());
     return cb(resp);
 }
+
+void ConversationController::updateMemberRole(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+    const std::string& conversationId,
+    const std::string& userId) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(unauthorized("Missing Bearer access token"));
+    }
+
+    if (conversationId.empty()) {
+        return cb(badRequest("Missing conversation id"));
+    }
+    if (userId.empty()) {
+        return cb(badRequest("Missing user id"));
+    }
+
+    const auto body = req->getJsonObject();
+    if (!body) {
+        return cb(badRequest("Body must be JSON"));
+    }
+
+    if (!body->isMember("role") || !(*body)["role"].isString()) {
+        return cb(badRequest("Field 'role' is required and must be a string"));
+    }
+
+    const std::string role = (*body)["role"].asString();
+    if (role != "owner" && role != "member") {
+        return cb(badRequest("Field 'role' must be either 'owner' or 'member'"));
+    }
+
+    ConversationService service;
+    auto result = service.updateMemberRole(token, conversationId, userId, role);
+
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<drogon::HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
+    return cb(resp);
+}
