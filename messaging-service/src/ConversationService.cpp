@@ -688,6 +688,98 @@ bool ensureCanViewConversation(const SupabaseEnv& env,
     return true;
 }
 
+// ---------- Helper 12: get member role and count owners for a conversation ----------
+bool fetchMemberRoleAndOwnerCount(const SupabaseEnv& env,
+                                  const std::string& conversationId,
+                                  const std::string& userId,
+                                  std::string& outMemberRole,
+                                  int& outOwnerCount,
+                                  ConversationService::Result& errOut) {
+    std::string url = env.base +
+        "/rest/v1/conversation_members"
+        "?select=user_id,role"
+        "&conversation_id=eq." + conversationId +
+        "&left_at=is.null";
+
+    CURL* c = curl_easy_init();
+    if (!c) {
+        errOut = makeError(500, "curl init failed (fetchMemberRoleAndOwnerCount)");
+        return false;
+    }
+
+    std::string resp;
+    long httpCode = 0;
+    struct curl_slist* h = nullptr;
+    h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+    h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+    h = curl_slist_append(h, "Content-Type: application/json");
+
+    curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+    curl_easy_setopt(c, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+    curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+    auto res = curl_easy_perform(c);
+    curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+    curl_slist_free_all(h);
+    curl_easy_cleanup(c);
+
+    if (res != CURLE_OK) {
+        errOut = makeError(500, "curl perform failed (fetchMemberRoleAndOwnerCount)");
+        return false;
+    }
+
+    if (httpCode != 200) {
+        ConversationService::Result r;
+        r.statusCode = static_cast<int>(httpCode);
+        r.body = resp.empty()
+            ? nlohmann::json::object()
+            : nlohmann::json::parse(resp, nullptr, false);
+        if (r.body.is_discarded()) r.body = nlohmann::json::object();
+        errOut = r;
+        return false;
+    }
+
+    nlohmann::json j = nlohmann::json::array();
+    if (!resp.empty()) {
+        j = nlohmann::json::parse(resp, nullptr, false);
+        if (j.is_discarded()) {
+            j = nlohmann::json::array();
+        }
+    }
+
+    outOwnerCount = 0;
+    bool found = false;
+    outMemberRole.clear();
+
+    if (j.is_array()) {
+        for (const auto& row : j) {
+            if (!row.is_object()) continue;
+            const auto itUser = row.find("user_id");
+            const auto itRole = row.find("role");
+            if (itRole != row.end() && itRole->is_string()) {
+                if (itRole->get<std::string>() == "owner") {
+                    ++outOwnerCount;
+                }
+            }
+            if (itUser != row.end() && itUser->is_string() &&
+                itUser->get<std::string>() == userId &&
+                itRole != row.end() && itRole->is_string()) {
+                outMemberRole = itRole->get<std::string>();
+                found = true;
+            }
+        }
+    }
+
+    if (!found) {
+        errOut = makeError(404, "Member not found in this conversation");
+        return false;
+    }
+
+    return true;
+}
+
 } // namespace
 
 
@@ -1206,13 +1298,14 @@ ConversationService::Result ConversationService::updateMemberRole(
         if (!fetchAuthUserId(env, authUserId, err)) {
             return err;
         }
+
         // 2) Recover the caller's profileId
         std::string profileId;
         if (!fetchProfileId(env, authUserId, profileId, err)) {
             return err;
         }
 
-        // 3) Check rights (owner/admin)
+        // 3) Recover the caller's role
         std::string callerRole;
         if (!checkConversationUpdateRights(env, profileId, conversationId, callerRole, err)) {
             return err;
@@ -1223,7 +1316,21 @@ ConversationService::Result ConversationService::updateMemberRole(
             return err;
         }
 
-        // 5) Update the member's role (only if left_at IS NULL)
+        // 5) Recover the target member's current role + number of owners
+        std::string currentMemberRole;
+        int ownerCount = 0;
+        if (!fetchMemberRoleAndOwnerCount(env, conversationId, userId,
+                                          currentMemberRole, ownerCount, err)) {
+            return err;
+        }
+
+        // 6) Cannot downgrade the last owner to member
+        if (currentMemberRole == "owner" && role == "member" && ownerCount <= 1) {
+            // 409 = Conflict
+            return makeError(409, "Cannot downgrade the last owner of the conversation");
+        }
+
+        // 7) Update the member's role (only if left_at IS NULL)
         std::string url = env.base +
             "/rest/v1/conversation_members"
             "?conversation_id=eq." + conversationId +
@@ -1266,7 +1373,9 @@ ConversationService::Result ConversationService::updateMemberRole(
         if (httpCode != 200) {
             ConversationService::Result r;
             r.statusCode = static_cast<int>(httpCode);
-            r.body = resp.empty() ? nlohmann::json::object() : nlohmann::json::parse(resp, nullptr, false);
+            r.body = resp.empty()
+                ? nlohmann::json::object()
+                : nlohmann::json::parse(resp, nullptr, false);
             if (r.body.is_discarded()) r.body = nlohmann::json::object();
             return r;
         }
@@ -1281,7 +1390,7 @@ ConversationService::Result ConversationService::updateMemberRole(
             j = nlohmann::json::array();
         }
 
-        // If nothing was updated → member not found or already left the conversation
+        // If nothing was updated → the member does not exist or has already left the conversation
         if (j.is_array() && j.empty()) {
             return makeError(404, "Member not found in this conversation or already left");
         }
@@ -1341,13 +1450,13 @@ ConversationService::Result ConversationService::deleteMember(
         const bool isSelf = (profileId == userId);
 
         if (!isSelf) {
-            // The caller want to remove another member → they must be owner/admin
+            // The caller is removing another member -> they must be owner/admin
             std::string callerRole;
             if (!checkConversationUpdateRights(env, profileId, conversationId, callerRole, err)) {
                 return err;
             }
         } else {
-            // The users remove themselves → they must at least be a member of the conversation
+            // The user is removing themselves -> they must at least be a member of the conversation
             if (!ensureCanViewConversation(env, profileId, conversationId, err)) {
                 return err;
             }
@@ -1358,7 +1467,20 @@ ConversationService::Result ConversationService::deleteMember(
             return err;
         }
 
-        // 4) DELETE on conversation_members (hard delete)
+        // 4) Recover the target member's role + owner count
+        std::string memberRole;
+        int ownerCount = 0;
+        if (!fetchMemberRoleAndOwnerCount(env, conversationId, userId,
+                                          memberRole, ownerCount, err)) {
+            return err; // include 404 if member not found
+        }
+
+        // 5) Empêcher de supprimer le dernier owner
+        if (memberRole == "owner" && ownerCount <= 1) {
+            return makeError(409, "Cannot remove the last owner of the conversation");
+        }
+
+        // 6) DELETE on conversation_members (hard delete)
         std::string url = env.base +
             "/rest/v1/conversation_members"
             "?conversation_id=eq." + conversationId +
@@ -1375,7 +1497,6 @@ ConversationService::Result ConversationService::deleteMember(
         h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
         h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
         h = curl_slist_append(h, "Content-Type: application/json");
-        // On demande un retour de la représentation pour savoir si quelque chose a été supprimé
         h = curl_slist_append(h, "Prefer: return=representation");
 
         curl_easy_setopt(c, CURLOPT_URL, url.c_str());
@@ -1410,11 +1531,10 @@ ConversationService::Result ConversationService::deleteMember(
                 j = nlohmann::json::array();
             }
         } else {
-            // If Supabase returns 204 with no body
             j = nlohmann::json::array();
         }
 
-        // If nothing was deleted → member not found in this conversation
+        // Si aucune ligne supprimée → le membre n'était pas dans cette conversation
         if (j.is_array() && j.empty()) {
             return makeError(404, "Member not found in this conversation");
         }
