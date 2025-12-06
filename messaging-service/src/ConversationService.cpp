@@ -629,6 +629,65 @@ bool ensureProfileExists(const SupabaseEnv& env,
     return true;
 }
 
+// ---------- Helper 11: ensure caller can view the conversation (is a member) ----------
+bool ensureCanViewConversation(const SupabaseEnv& env,
+                               const std::string& profileId,
+                               const std::string& conversationId,
+                               ConversationService::Result& errOut) {
+    std::string url = env.base +
+        "/rest/v1/conversation_members"
+        "?select=id"
+        "&conversation_id=eq." + conversationId +
+        "&user_id=eq." + profileId +
+        "&left_at=is.null";
+
+    CURL* c = curl_easy_init();
+    if (!c) {
+        errOut = makeError(500, "curl init failed (ensureCanViewConversation)");
+        return false;
+    }
+
+    std::string resp;
+    long httpCode = 0;
+    struct curl_slist* h = nullptr;
+    h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+    h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+    h = curl_slist_append(h, "Content-Type: application/json");
+
+    curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+    curl_easy_setopt(c, CURLOPT_HTTPGET, 1L);
+    curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+    curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+    auto res = curl_easy_perform(c);
+    curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+    curl_slist_free_all(h);
+    curl_easy_cleanup(c);
+
+    if (res != CURLE_OK) {
+        errOut = makeError(500, "curl perform failed (ensureCanViewConversation)");
+        return false;
+    }
+
+    if (httpCode != 200) {
+        ConversationService::Result r;
+        r.statusCode = static_cast<int>(httpCode);
+        r.body = resp.empty() ? nlohmann::json::object() : nlohmann::json::parse(resp, nullptr, false);
+        if (r.body.is_discarded()) r.body = nlohmann::json::object();
+        errOut = r;
+        return false;
+    }
+
+    auto j = nlohmann::json::parse(resp, nullptr, false);
+    if (j.is_discarded() || !j.is_array() || j.empty()) {
+        errOut = makeError(403, "You are not a member of this conversation");
+        return false;
+    }
+
+    return true;
+}
+
 } // namespace
 
 
@@ -996,6 +1055,111 @@ ConversationService::Result ConversationService::addMember(
         ConversationService::Result r;
         r.statusCode = 201;
         r.body = inserted;
+        return r;
+
+    } catch (const std::exception& e) {
+        return makeError(500, e.what());
+    }
+}
+
+ConversationService::Result ConversationService::listMembers(
+    const std::string& accessToken,
+    const std::string& conversationId
+) {
+    try {
+        if (accessToken.empty()) {
+            return makeError(401, "Missing Bearer access token");
+        }
+        if (conversationId.empty()) {
+            return makeError(400, "Missing conversation id");
+        }
+
+        const char* base = std::getenv("SUPABASE_URL");
+        const char* anon = std::getenv("SUPABASE_ANON_KEY");
+        if (!base || !anon) {
+            return makeError(500, "Missing SUPABASE_URL/ANON_KEY");
+        }
+
+        SupabaseEnv env{
+            std::string(base),
+            std::string(anon),
+            accessToken
+        };
+
+        ConversationService::Result err;
+
+        // 1) Recover the authenticated user (authUserId)
+        std::string authUserId;
+        if (!fetchAuthUserId(env, authUserId, err)) {
+            return err;
+        }
+
+        // 2) Recover the caller's profileId
+        std::string profileId;
+        if (!fetchProfileId(env, authUserId, profileId, err)) {
+            return err;
+        }
+
+        // 3) check rights (is member)
+        if (!ensureCanViewConversation(env, profileId, conversationId, err)) {
+            return err;
+        }
+
+        // 4) Recover the list of active members of the conversation
+        std::string url = env.base +
+            "/rest/v1/conversation_members"
+            "?select=id,conversation_id,user_id,role,joined_at,left_at"
+            "&conversation_id=eq." + conversationId +
+            "&left_at=is.null";
+
+        CURL* c = curl_easy_init();
+        if (!c) {
+            return makeError(500, "curl init failed (listMembers)");
+        }
+
+        std::string resp;
+        long httpCode = 0;
+        struct curl_slist* h = nullptr;
+        h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+        h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+        h = curl_slist_append(h, "Content-Type: application/json");
+
+        curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+        curl_easy_setopt(c, CURLOPT_HTTPGET, 1L);
+        curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+        curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+        auto res = curl_easy_perform(c);
+        curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+        curl_slist_free_all(h);
+        curl_easy_cleanup(c);
+
+        if (res != CURLE_OK) {
+            return makeError(500, "curl perform failed (listMembers)");
+        }
+
+        if (httpCode != 200) {
+            ConversationService::Result r;
+            r.statusCode = static_cast<int>(httpCode);
+            r.body = resp.empty() ? nlohmann::json::object() : nlohmann::json::parse(resp, nullptr, false);
+            if (r.body.is_discarded()) r.body = nlohmann::json::object();
+            return r;
+        }
+
+        nlohmann::json j;
+        if (!resp.empty()) {
+            j = nlohmann::json::parse(resp, nullptr, false);
+            if (j.is_discarded()) {
+                j = nlohmann::json::array();
+            }
+        } else {
+            j = nlohmann::json::array();
+        }
+
+        ConversationService::Result r;
+        r.statusCode = 200;
+        r.body = j;
         return r;
 
     } catch (const std::exception& e) {

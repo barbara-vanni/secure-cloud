@@ -37,6 +37,10 @@ public:
     ADD_METHOD_TO(ConversationController::addMember,
                   "/conversations/{id}/members", drogon::Post);
 
+    // GET /conversations/{id}/members → list members of a conversation
+    ADD_METHOD_TO(ConversationController::listMembers,
+                  "/conversations/{id}/members", drogon::Get);
+
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -60,6 +64,10 @@ public:
     void addMember(const drogon::HttpRequestPtr& req,
                    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                    const std::string& conversationId) const;
+
+    void listMembers(const drogon::HttpRequestPtr& req,
+                     std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                     const std::string& conversationId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

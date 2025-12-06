@@ -233,3 +233,27 @@ void ConversationController::addMember(
     resp->setBody(result.body.dump());
     return cb(resp);
 }
+
+void ConversationController::listMembers(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+    const std::string& conversationId) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(unauthorized("Missing Bearer access token"));
+    }
+
+    if (conversationId.empty()) {
+        return cb(badRequest("Missing conversation id"));
+    }
+
+    ConversationService service;
+    auto result = service.listMembers(token, conversationId);
+
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<drogon::HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
+    return cb(resp);
+}

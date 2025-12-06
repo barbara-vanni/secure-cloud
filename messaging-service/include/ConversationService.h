@@ -53,6 +53,12 @@ public:
         const std::string& conversationId,
         const std::string& userId
     );
+
+    // List members of a conversation (only if caller is member)
+    Result listMembers(
+        const std::string& accessToken,
+        const std::string& conversationId
+    );
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONSERVICE_H
