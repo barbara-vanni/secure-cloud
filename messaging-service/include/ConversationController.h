@@ -33,6 +33,10 @@ public:
     ADD_METHOD_TO(ConversationController::deleteConversation,
     "/conversations/{id}", drogon::Delete);
 
+    // POST /conversations/{id}/members → add a user as member
+    ADD_METHOD_TO(ConversationController::addMember,
+                  "/conversations/{id}/members", drogon::Post);
+
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -52,6 +56,10 @@ public:
     void deleteConversation(const drogon::HttpRequestPtr& req,
                         std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                         const std::string& conversationId) const;
+
+    void addMember(const drogon::HttpRequestPtr& req,
+                   std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                   const std::string& conversationId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

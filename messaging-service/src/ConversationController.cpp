@@ -198,3 +198,38 @@ void ConversationController::deleteConversation(
     resp->setBody(result.body.dump());
     return cb(resp);
 }
+
+void ConversationController::addMember(
+    const drogon::HttpRequestPtr& req,
+    std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+    const std::string& conversationId) const {
+
+    const auto token = getBearerToken(req);
+    if (token.empty()) {
+        return cb(unauthorized("Missing Bearer access token"));
+    }
+
+    if (conversationId.empty()) {
+        return cb(badRequest("Missing conversation id"));
+    }
+
+    const auto body = req->getJsonObject();
+    if (!body) {
+        return cb(badRequest("Body must be JSON"));
+    }
+
+    if (!body->isMember("user_id") || !(*body)["user_id"].isString()) {
+        return cb(badRequest("Field 'user_id' is required and must be a string (profile id)"));
+    }
+
+    const std::string userId = (*body)["user_id"].asString();
+
+    ConversationService service;
+    auto result = service.addMember(token, conversationId, userId);
+
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<drogon::HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    resp->setBody(result.body.dump());
+    return cb(resp);
+}

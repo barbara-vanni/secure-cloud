@@ -46,6 +46,13 @@ public:
         const std::string& accessToken,
         const std::string& conversationId
     );
+
+    // Add a user as member to a conversation
+    Result addMember(
+        const std::string& accessToken,
+        const std::string& conversationId,
+        const std::string& userId
+    );
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONSERVICE_H
