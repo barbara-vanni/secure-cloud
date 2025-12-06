@@ -45,6 +45,11 @@ public:
     ADD_METHOD_TO(ConversationController::updateMemberRole,
                   "/conversations/{id}/members/{userId}", drogon::Patch);
 
+
+    // DELETE /conversations/{id}/members/{userId} → remove a member from a conversation
+    ADD_METHOD_TO(ConversationController::deleteMember,
+                  "/conversations/{id}/members/{userId}", drogon::Delete);
+
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -77,6 +82,11 @@ public:
                       std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                       const std::string& conversationId,
                       const std::string& userId) const;
+
+    void deleteMember(const drogon::HttpRequestPtr& req,
+                  std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                  const std::string& conversationId,
+                  const std::string& userId) const;
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONCONTROLLER_H

@@ -67,6 +67,13 @@ public:
         const std::string& userId,
         const std::string& role
     );
+
+    // Delete a member from a conversation
+    Result deleteMember(
+        const std::string& accessToken,
+        const std::string& conversationId,
+        const std::string& userId
+    );
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONSERVICE_H

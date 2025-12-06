@@ -1295,3 +1295,136 @@ ConversationService::Result ConversationService::updateMemberRole(
         return makeError(500, e.what());
     }
 }
+
+ConversationService::Result ConversationService::deleteMember(
+    const std::string& accessToken,
+    const std::string& conversationId,
+    const std::string& userId
+) {
+    try {
+        if (accessToken.empty()) {
+            return makeError(401, "Missing Bearer access token");
+        }
+        if (conversationId.empty()) {
+            return makeError(400, "Missing conversation id");
+        }
+        if (userId.empty()) {
+            return makeError(400, "Missing user id");
+        }
+
+        const char* base = std::getenv("SUPABASE_URL");
+        const char* anon = std::getenv("SUPABASE_ANON_KEY");
+        if (!base || !anon) {
+            return makeError(500, "Missing SUPABASE_URL/ANON_KEY");
+        }
+
+        SupabaseEnv env{
+            std::string(base),
+            std::string(anon),
+            accessToken
+        };
+
+        ConversationService::Result err;
+
+        // 1) Recover the authenticated user (authUserId)
+        std::string authUserId;
+        if (!fetchAuthUserId(env, authUserId, err)) {
+            return err;
+        }
+
+        // 2) Recover the caller's profileId
+        std::string profileId;
+        if (!fetchProfileId(env, authUserId, profileId, err)) {
+            return err;
+        }
+
+        const bool isSelf = (profileId == userId);
+
+        if (!isSelf) {
+            // The caller want to remove another member → they must be owner/admin
+            std::string callerRole;
+            if (!checkConversationUpdateRights(env, profileId, conversationId, callerRole, err)) {
+                return err;
+            }
+        } else {
+            // The users remove themselves → they must at least be a member of the conversation
+            if (!ensureCanViewConversation(env, profileId, conversationId, err)) {
+                return err;
+            }
+        }
+
+        // 3) Check that the target profile exists
+        if (!ensureProfileExists(env, userId, err)) {
+            return err;
+        }
+
+        // 4) DELETE on conversation_members (hard delete)
+        std::string url = env.base +
+            "/rest/v1/conversation_members"
+            "?conversation_id=eq." + conversationId +
+            "&user_id=eq." + userId;
+
+        CURL* c = curl_easy_init();
+        if (!c) {
+            return makeError(500, "curl init failed (deleteMember)");
+        }
+
+        std::string resp;
+        long httpCode = 0;
+        struct curl_slist* h = nullptr;
+        h = curl_slist_append(h, ("apikey: " + env.anonKey).c_str());
+        h = curl_slist_append(h, ("Authorization: Bearer " + env.accessToken).c_str());
+        h = curl_slist_append(h, "Content-Type: application/json");
+        // On demande un retour de la représentation pour savoir si quelque chose a été supprimé
+        h = curl_slist_append(h, "Prefer: return=representation");
+
+        curl_easy_setopt(c, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(c, CURLOPT_HTTPHEADER, h);
+        curl_easy_setopt(c, CURLOPT_CUSTOMREQUEST, "DELETE");
+        curl_easy_setopt(c, CURLOPT_WRITEFUNCTION, writeCb);
+        curl_easy_setopt(c, CURLOPT_WRITEDATA, &resp);
+
+        auto res = curl_easy_perform(c);
+        curl_easy_getinfo(c, CURLINFO_RESPONSE_CODE, &httpCode);
+        curl_slist_free_all(h);
+        curl_easy_cleanup(c);
+
+        if (res != CURLE_OK) {
+            return makeError(500, "curl perform failed (deleteMember)");
+        }
+
+        if (httpCode != 200 && httpCode != 204) {
+            ConversationService::Result r;
+            r.statusCode = static_cast<int>(httpCode);
+            r.body = resp.empty()
+                ? nlohmann::json::object()
+                : nlohmann::json::parse(resp, nullptr, false);
+            if (r.body.is_discarded()) r.body = nlohmann::json::object();
+            return r;
+        }
+
+        nlohmann::json j;
+        if (!resp.empty()) {
+            j = nlohmann::json::parse(resp, nullptr, false);
+            if (j.is_discarded()) {
+                j = nlohmann::json::array();
+            }
+        } else {
+            // If Supabase returns 204 with no body
+            j = nlohmann::json::array();
+        }
+
+        // If nothing was deleted → member not found in this conversation
+        if (j.is_array() && j.empty()) {
+            return makeError(404, "Member not found in this conversation");
+        }
+
+        ConversationService::Result r;
+        r.statusCode = 200;
+        r.body = j;
+        return r;
+
+    } catch (const std::exception& e) {
+        return makeError(500, e.what());
+    }
+}
