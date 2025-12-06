@@ -28,6 +28,11 @@ public:
     // PATCH /conversations/{id} → update conversation (only name if you're owner )
     ADD_METHOD_TO(ConversationController::updateConversation,
               "/conversations/{id}", drogon::Patch);
+
+    //  DELETE /conversations/{id} → delete conversation (only if you're owner)
+    ADD_METHOD_TO(ConversationController::deleteConversation,
+    "/conversations/{id}", drogon::Delete);
+
     METHOD_LIST_END
 
     void createConversation(const drogon::HttpRequestPtr& req,
@@ -41,6 +46,10 @@ public:
                          const std::string& conversationId) const;
 
     void updateConversation(const drogon::HttpRequestPtr& req,
+                        std::function<void (const drogon::HttpResponsePtr &)> &&cb,
+                        const std::string& conversationId) const;
+
+    void deleteConversation(const drogon::HttpRequestPtr& req,
                         std::function<void (const drogon::HttpResponsePtr &)> &&cb,
                         const std::string& conversationId) const;
 };

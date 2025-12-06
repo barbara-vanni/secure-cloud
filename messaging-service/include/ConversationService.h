@@ -33,12 +33,19 @@ public:
         const std::string& accessToken,
         const std::string& conversationId
     );
+
     // Update conversation (only name if you're owner )
     Result updateConversation(
     const std::string& accessToken,
     const std::string& conversationId,
     const std::optional<std::string>& name
-);
+    );
+
+    // Delete a conversation (only if you're owner)
+    Result deleteConversation(
+        const std::string& accessToken,
+        const std::string& conversationId
+    );
 };
 
 #endif //SECURE_CLOUD_CONVERSATIONSERVICE_H

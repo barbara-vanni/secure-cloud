@@ -8,6 +8,9 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <string>
+#include <chrono>
+#include <iomanip>
+#include <sstream>
 
 using nlohmann::json;
 
@@ -275,9 +278,10 @@ bool fetchMyConversations(const SupabaseEnv& env,
                           ConversationService::Result& errOut) {
     std::string url = env.base +
         "/rest/v1/conversation_members"
-        "?select=conversation:conversations(*),role,joined_at,left_at"
+    "?select=conversation:conversations!inner(*),role,joined_at,left_at"
         "&user_id=eq." + profileId +
-        "&left_at=is.null";
+        "&left_at=is.null"
+        "&conversation.deleted_at=is.null";
 
     CURL* c = curl_easy_init();
     if (!c) {
@@ -334,10 +338,11 @@ bool fetchConversationById(const SupabaseEnv& env,
                            ConversationService::Result& errOut) {
     std::string url = env.base +
         "/rest/v1/conversation_members"
-        "?select=conversation:conversations(*),role,joined_at,left_at"
+    "?select=conversation:conversations!inner(*),role,joined_at,left_at"
         "&user_id=eq." + profileId +
         "&conversation_id=eq." + conversationId +
-        "&left_at=is.null";
+        "&left_at=is.null"
+        "&conversation.deleted_at=is.null";
 
     CURL* c = curl_easy_init();
     if (!c) {
@@ -528,6 +533,21 @@ bool checkConversationUpdateRights(const SupabaseEnv& env,
     return true;
 }
 
+// ----------- Helper 9: Get current time in ISO 8601 UTC ----------
+std::string nowIsoUtc() {
+    using namespace std::chrono;
+    auto now = system_clock::now();
+    std::time_t t = system_clock::to_time_t(now);
+    std::tm tm{};
+#ifdef _WIN32
+    gmtime_s(&tm, &t);
+#else
+    gmtime_r(&t, &tm);
+#endif
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%dT%H:%M:%SZ");
+    return oss.str();
+}
 } // namespace
 
 
@@ -753,6 +773,71 @@ ConversationService::Result ConversationService::updateConversation(
         }
 
         // 5) PATCH on conversations
+        nlohmann::json updated;
+        if (!patchConversationRow(env, conversationId, payload, updated, err)) {
+            return err;
+        }
+
+        ConversationService::Result r;
+        r.statusCode = 200;
+        r.body = updated;
+        return r;
+
+    } catch (const std::exception& e) {
+        return makeError(500, e.what());
+    }
+}
+
+ConversationService::Result ConversationService::deleteConversation(
+    const std::string& accessToken,
+    const std::string& conversationId
+) {
+    try {
+        if (accessToken.empty()) {
+            return makeError(401, "Missing Bearer access token");
+        }
+        if (conversationId.empty()) {
+            return makeError(400, "Missing conversation id");
+        }
+
+        const char* base = std::getenv("SUPABASE_URL");
+        const char* anon = std::getenv("SUPABASE_ANON_KEY");
+        if (!base || !anon) {
+            return makeError(500, "Missing SUPABASE_URL/ANON_KEY");
+        }
+
+        SupabaseEnv env{
+            std::string(base),
+            std::string(anon),
+            accessToken
+        };
+
+        ConversationService::Result err;
+
+        // 1) authUserId
+        std::string authUserId;
+        if (!fetchAuthUserId(env, authUserId, err)) {
+            return err;
+        }
+
+        // 2) profileId
+        std::string profileId;
+        if (!fetchProfileId(env, authUserId, profileId, err)) {
+            return err;
+        }
+
+        // 3) Check rights (owner/admin)
+        std::string role;
+        if (!checkConversationUpdateRights(env, profileId, conversationId, role, err)) {
+            return err;
+        }
+
+        // 4) Soft delete : put deleted_at (and updated_at) to now
+        nlohmann::json payload;
+        const auto ts = nowIsoUtc();
+        payload["deleted_at"] = ts;
+        payload["updated_at"] = ts;
+
         nlohmann::json updated;
         if (!patchConversationRow(env, conversationId, payload, updated, err)) {
             return err;
