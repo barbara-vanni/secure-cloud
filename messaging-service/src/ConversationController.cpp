@@ -68,6 +68,28 @@ void ConversationController::createConversation(
         name = (*body)["name"].asString();
     }
 
+    // target_user_id for direct
+    std::optional<std::string> targetUserId;
+    if (type == "direct") {
+        if (!body->isMember("target_user_id") || !(*body)["target_user_id"].isString()) {
+            return cb(makeJsonError(
+                k400BadRequest,
+                "Field 'target_user_id' is required for type='direct' and must be a string (profile id)"
+            ));
+        }
+        targetUserId = (*body)["target_user_id"].asString();
+    }
+
+    // If group, target_user_id is not allowed
+    if (type == "group") {
+        if (body->isMember("target_user_id")) {
+            return cb(makeJsonError(
+                k400BadRequest,
+                "Field 'target_user_id' is not allowed for type='group'"
+            ));
+        }
+    }
+
     // 2) Take the Bearer token from the Authorization header
     const auto token = getBearerToken(req);
     if (token.empty()) {
@@ -79,13 +101,14 @@ void ConversationController::createConversation(
     auto result = service.createConversation(
         token,
         type,
-        name
+        name,
+        targetUserId
     );
 
     // 4) Build the HTTP response from the result
-    auto resp = HttpResponse::newHttpResponse();
-    resp->setStatusCode(static_cast<HttpStatusCode>(result.statusCode));
-    resp->setContentTypeCode(CT_APPLICATION_JSON);
+    auto resp = drogon::HttpResponse::newHttpResponse();
+    resp->setStatusCode(static_cast<drogon::HttpStatusCode>(result.statusCode));
+    resp->setContentTypeCode(drogon::CT_APPLICATION_JSON);
     resp->setBody(result.body.dump());
 
     return cb(resp);

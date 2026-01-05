@@ -20,7 +20,8 @@ public:
     Result createConversation(
         const std::string& accessToken,
         const std::string& type,
-        const std::optional<std::string>& name
+        const std::optional<std::string>& name,
+        const std::optional<std::string>& targetUserId
     );
 
     // List all conversations where the current user is a member
