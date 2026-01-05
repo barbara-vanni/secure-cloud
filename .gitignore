@@ -4,12 +4,12 @@
 .env.*
 docker/.env
 auth-service/.env
+messaging-service/.env
 
 # CMake files
 CMakeCache.txt
 CMakeFiles/
 cmake-build-*/
-**/build/
 *.cmake.user
 *.cmake.install.cmake
 Makefile

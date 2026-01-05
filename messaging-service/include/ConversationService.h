@@ -1,0 +1,80 @@
+//
+// Created by walid on 03/12/2025.
+//
+
+#ifndef SECURE_CLOUD_CONVERSATIONSERVICE_H
+#define SECURE_CLOUD_CONVERSATIONSERVICE_H
+
+#include <nlohmann/json.hpp>
+#include <optional>
+#include <string>
+
+class ConversationService {
+public:
+    struct Result {
+        int statusCode;
+        nlohmann::json body;
+    };
+
+    // Create a new conversation
+    Result createConversation(
+        const std::string& accessToken,
+        const std::string& type,
+        const std::optional<std::string>& name,
+        const std::optional<std::string>& targetUserId
+    );
+
+    // List all conversations where the current user is a member
+    Result listMyConversations(
+        const std::string& accessToken
+    );
+
+    // take the conversationId as parameter
+    Result getConversationById(
+        const std::string& accessToken,
+        const std::string& conversationId
+    );
+
+    // Update conversation (only name if you're owner )
+    Result updateConversation(
+    const std::string& accessToken,
+    const std::string& conversationId,
+    const std::optional<std::string>& name
+    );
+
+    // Delete a conversation (only if you're owner)
+    Result deleteConversation(
+        const std::string& accessToken,
+        const std::string& conversationId
+    );
+
+    // Add a user as member to a conversation
+    Result addMember(
+        const std::string& accessToken,
+        const std::string& conversationId,
+        const std::string& userId
+    );
+
+    // List members of a conversation (only if caller is member)
+    Result listMembers(
+        const std::string& accessToken,
+        const std::string& conversationId
+    );
+
+    // Update role of a member in a conversation (owner/admin only)
+    Result updateMemberRole(
+        const std::string& accessToken,
+        const std::string& conversationId,
+        const std::string& userId,
+        const std::string& role
+    );
+
+    // Delete a member from a conversation
+    Result deleteMember(
+        const std::string& accessToken,
+        const std::string& conversationId,
+        const std::string& userId
+    );
+};
+
+#endif //SECURE_CLOUD_CONVERSATIONSERVICE_H

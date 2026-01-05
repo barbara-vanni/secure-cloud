@@ -1,8 +1,5 @@
-cmake_minimum_required(VERSION 3.20)
-project(secure-cloud)
-
-# Inclusion de tous les microservices
+cmake_minimum_required(VERSION 3.18)
+project(secure-cloud CXX)
 add_subdirectory(auth-service)
-add_subdirectory(files-service)
-add_subdirectory(audit-service)
-add_subdirectory(messaging-service)
+# add_subdirectory(files-service)
+ add_subdirectory(messaging-service)
